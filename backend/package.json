@@ -1,0 +1,23 @@
+{
+    "name": "forks-of-italy",
+    "version": "1.0.0",
+    "description": "GreenRide - Node.js server",
+    "main": "index.js",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "node --watch src/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^17.2.2",
+        "express": "^5.1.0",
+        "express-session": "^1.18.2",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.18.2"
+    }
+}
