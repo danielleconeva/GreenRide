@@ -1,9 +1,7 @@
-import "./App.css";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes/routes.ts";
+import "./styles/App.css";
 
 export default function App() {
-    return (
-        <div>
-            <h1>GreenRide is running!</h1>
-        </div>
-    );
+    return <RouterProvider router={router} />;
 }
