@@ -14,7 +14,7 @@ routes.use("/rides", rideController);
 
 routes.use("/bookings", bookingController);
 
-routes.all("*", (req, res) => {
+routes.all("*url", (req, res) => {
     res.status(404).json({ message: "Route not found" });
 });
 

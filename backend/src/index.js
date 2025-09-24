@@ -1,11 +1,9 @@
 import express from "express";
 import cookieParser from "cookie-parser";
-import expressSession from "express-session";
 import initDataBase from "./config/dbConfig.js";
-import { SESSION_SECRET } from "./config/index.js";
 import { auth } from "./middlewares/authMiddleware.js";
-import { tempData } from "./middlewares/tempDataMiddleware.js";
 import routes from "./routes.js";
+import cors from "cors";
 
 const app = express();
 
@@ -14,15 +12,13 @@ initDataBase();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(expressSession({
-    secret: SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false, httpOnly: true }
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
 }));
 
 app.use(auth);
-app.use(tempData);
 
 app.use("/api", routes);
 
