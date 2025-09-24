@@ -1,5 +1,5 @@
 import { RouterProvider } from "react-router-dom";
-import { router } from "./routes/routes.ts";
+import { router } from "./routes/routes.tsx";
 import "./styles/App.css";
 
 export default function App() {

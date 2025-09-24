@@ -22,4 +22,8 @@ export const theme = {
         mutedForeground: "hsl(215.4 16.3% 46.9%)",
 
     },
+    fonts: {
+        body: "'Montserrat', sans-serif"
+    }
+
 };
