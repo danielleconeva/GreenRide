@@ -3,7 +3,7 @@ import { JWT_SECRET } from '../config/index.js';
 
 export function generateAuthToken(user) {
     const payload = {
-        id: user.id,
+        id: user.id || user._id.toString(),
         email: user.email,
         username: user.username
     };

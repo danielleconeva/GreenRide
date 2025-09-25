@@ -1,38 +1,53 @@
 import { AUTH_COOKIE_NAME, JWT_SECRET } from "../config/index.js";
-import jsonwebtoken from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import { cookieOptions } from "../config/cookieOptions.js";
 
 export function auth(req, res, next) {
     const token = req.cookies[AUTH_COOKIE_NAME];
 
     if (!token) {
         req.isAuthenticated = false;
+        req.user = null;
         return next();
     }
 
     try {
-        const user = jsonwebtoken.verify(token, JWT_SECRET);
+        const payload = jwt.verify(token, JWT_SECRET);
+
+        const id = payload.id || payload._id || payload.sub;
+        if (!id) {
+            req.isAuthenticated = false;
+            req.user = null;
+            return res.status(401).json({ error: "Invalid token payload" });
+        }
 
         req.isAuthenticated = true;
-        req.user = user;
+        req.user = {
+            id,
+            email: payload.email,
+            username: payload.username,
+        };
 
-        next();
+        return next();
     } catch (err) {
-        res.clearCookie(AUTH_COOKIE_NAME);
+
+        res.clearCookie(AUTH_COOKIE_NAME, cookieOptions);
         req.isAuthenticated = false;
+        req.user = null;
         return res.status(401).json({ error: "Invalid or expired token. Please log in again." });
     }
 }
 
 export function isAuth(req, res, next) {
-    if (!req.isAuthenticated) {
+    if (!req.isAuthenticated || !req.user) {
         return res.status(401).json({ error: "Authentication required." });
     }
-    next();
+    return next();
 }
 
 export function isGuest(req, res, next) {
-    if (req.isAuthenticated) {
+    if (req.isAuthenticated && req.user) {
         return res.status(403).json({ error: "You are already logged in." });
     }
-    next();
+    return next();
 }
