@@ -41,8 +41,44 @@ const MenuItem = styled.li`
         }
 
         &.active {
-            border-bottom-color: #374151;
+            border-bottom-color: #3a414b;
         }
+    }
+`;
+
+const UserBadge = styled(NavLink)`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 36px;
+    border-radius: 50%;
+
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+    transition: all 0.2s ease;
+
+    padding: 0.1rem;
+    border-bottom: 0 !important;
+    text-decoration: none;
+
+    &:hover {
+        background: #f3f4f8;
+        color: #14b8a6;
+        border-color: #cfd2d7;
+        box-shadow: inset 0 -1px 0 #cfd2d7;
+    }
+
+    &.active {
+        background: #edeeef;
+        color: #14b8a6;
+        border-bottom: none !important;
+    }
+
+    &:focus-visible {
+        outline: 2px solid #14b8a6;
+        outline-offset: 2px;
     }
 `;
 
@@ -65,11 +101,10 @@ export default function NavBar() {
                 </MenuItem>
                 {user ? (
                     <>
-                        <p>Welcome, {user.username}</p>
                         <MenuItem>
-                            <NavLink to="/profile">
+                            <UserBadge to="/profile">
                                 <User size={20} />
-                            </NavLink>
+                            </UserBadge>
                         </MenuItem>
                         <LogoutButton />
                     </>
