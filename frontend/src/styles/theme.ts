@@ -20,6 +20,7 @@ export const theme = {
 
         muted: "hsl(210 40% 98%)",
         mutedForeground: "hsl(215.4 16.3% 46.9%)",
+        gradientHero: "linear-gradient(135deg, hsl(174 55% 45%), hsl(174 60% 55%))",
 
     },
     fonts: {
