@@ -1,6 +1,10 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { theme } from "../styles/theme";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import LogoutButton from "./LogoutButton";
+import { User } from "lucide-react";
 
 const NavElement = styled.nav`
     font-family: ${theme.fonts.body};
@@ -18,6 +22,7 @@ const MenuWrapper = styled.ul`
     margin: 0;
     padding: 0;
     gap: 2rem;
+    align-items: center;
 `;
 
 const MenuItem = styled.li`
@@ -42,6 +47,8 @@ const MenuItem = styled.li`
 `;
 
 export default function NavBar() {
+    const user = useSelector((state: RootState) => state.auth.user);
+
     return (
         <NavElement>
             <MenuWrapper>
@@ -56,12 +63,26 @@ export default function NavBar() {
                 <MenuItem>
                     <NavLink to="/publish">Publish a Ride</NavLink>
                 </MenuItem>
-                <MenuItem>
-                    <NavLink to="/login">Log In</NavLink>
-                </MenuItem>
-                <MenuItem>
-                    <NavLink to="/register">Sign Up</NavLink>
-                </MenuItem>
+                {user ? (
+                    <>
+                        <p>Welcome, {user.username}</p>
+                        <MenuItem>
+                            <NavLink to="/profile">
+                                <User size={20} />
+                            </NavLink>
+                        </MenuItem>
+                        <LogoutButton />
+                    </>
+                ) : (
+                    <>
+                        <MenuItem>
+                            <NavLink to="/login">Log In</NavLink>
+                        </MenuItem>
+                        <MenuItem>
+                            <NavLink to="/register">Sign Up</NavLink>
+                        </MenuItem>
+                    </>
+                )}
             </MenuWrapper>
         </NavElement>
     );
