@@ -16,7 +16,7 @@ const MainWrapper = styled.div`
 const IntroText = styled.div`
     flex: 1;
     text-align: center;
-    padding-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
 
     h1 {
         margin-bottom: 1.3rem;
@@ -45,7 +45,6 @@ export default function PublishPage() {
                     </p>
                 </IntroText>
                 <PublishForm></PublishForm>
-                <button>+ Publish a Ride</button>
             </MainWrapper>
         </>
     );

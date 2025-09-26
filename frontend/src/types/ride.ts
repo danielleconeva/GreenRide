@@ -12,8 +12,8 @@ export interface Ride {
     seatsAvailable: number;
     amenities: {
         airConditioning: boolean;
-        musicAllowed: boolean;
-        nonSmoking: boolean;
+        music: boolean;
+        smokingAllowed: boolean;
         petsAllowed: boolean;
     };
     ecoImpact: {
