@@ -9,8 +9,16 @@ const MainWrapper = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    padding: 2rem;
 `;
-const FormWrapper = styled.div``;
+
+const FormWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+`;
+
 const IntroText = styled.div`
     flex: 1;
     text-align: center;

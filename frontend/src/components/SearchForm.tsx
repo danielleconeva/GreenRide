@@ -2,37 +2,39 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Search, MapPin, Calendar, Users } from "lucide-react";
 import { useCities } from "../hooks/useCtities";
-
+import { useNavigate } from "react-router-dom";
 const Card = styled.div`
     width: 100%;
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 16px;
-    padding: 1rem;
-    padding-bottom: 2.5rem;
+    padding: 2rem; /* Equal padding on all sides */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     margin-top: 0;
 `;
 
 const Form = styled.form`
-    display: flex;
     display: block;
     width: 900px;
-    padding-left: 1.5rem;
+    margin: 0 auto; /* Center the form within the card */
 `;
 
 const Group = styled.div`
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 1.5rem; /* Consistent spacing */
     flex: 1 1 300px;
-    margin: 1rem 1rem;
 `;
 
 const Row = styled.div`
     display: flex;
     flex-direction: row;
     gap: 2rem;
+
+    /* Ensure equal width columns */
+    > ${Group} {
+        flex: 1;
+    }
 `;
 
 const Label = styled.label`
@@ -54,11 +56,12 @@ const Input = styled.input`
     border-radius: 8px;
     border: 1px solid #d1d5db;
     background: #fff;
-    color: #3e4045;
+    color: #4e4f54;
     font-size: 0.95rem;
     padding: 0 12px 0 40px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     outline: none;
+    box-sizing: border-box; /* Ensures consistent sizing */
 
     &::placeholder {
         color: #9ca3af;
@@ -94,6 +97,7 @@ const SuggestionItem = styled.li`
     padding: 8px 12px;
     cursor: pointer;
     font-size: 0.9rem;
+
     &:hover {
         background: #f3f4f6;
     }
@@ -129,16 +133,17 @@ const SelectWrap = styled.div`
 const Select = styled.select`
     display: block;
     width: 100%;
-    height: 44px;
+    height: 44px; /* Same height as Input */
     border-radius: 8px;
     border: 1px solid #d1d5db;
     background: #fff;
-    color: #111827;
+    color: #46494f;
     font-size: 0.95rem;
     padding: 0 30px 0 40px;
     outline: none;
     appearance: none;
     cursor: pointer;
+    box-sizing: border-box; /* Ensures consistent sizing with inputs */
 
     &:focus {
         border-color: #14b8a6;
@@ -147,7 +152,10 @@ const Select = styled.select`
 `;
 
 const Submit = styled.button`
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     width: 50%;
     height: 48px;
     border: 0;
@@ -156,18 +164,13 @@ const Submit = styled.button`
     color: #fff;
     font-weight: 700;
     font-size: 1rem;
-    margin: 0 auto;
-    margin-top: 18px;
+    margin: 18px auto 0;
     cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
 
     &:hover {
         background: #0f766e;
     }
+
     &:focus {
         outline: none;
         box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
@@ -176,8 +179,12 @@ const Submit = styled.button`
 
 export default function SearchForm() {
     const { cities } = useCities("Bulgaria");
+    const navigate = useNavigate();
+
     const [departure, setDeparture] = useState("");
     const [destination, setDestination] = useState("");
+    const [date, setDate] = useState("");
+    const [passengers, setPassengers] = useState("1");
     const [showDep, setShowDep] = useState(false);
     const [showDest, setShowDest] = useState(false);
 
@@ -188,9 +195,22 @@ export default function SearchForm() {
                   .slice(0, 10)
             : [];
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const params = new URLSearchParams({
+            from: departure,
+            to: destination,
+            date,
+            passengers,
+        });
+
+        navigate(`/results?${params.toString()}`);
+    };
+
     return (
         <Card>
-            <Form onSubmit={(e) => e.preventDefault()}>
+            <Form onSubmit={handleSubmit}>
                 <Row>
                     <Group>
                         <Label htmlFor="departure">Leaving From</Label>
@@ -206,6 +226,7 @@ export default function SearchForm() {
                             />
                             <Input
                                 id="departure"
+                                name="from"
                                 type="text"
                                 placeholder="Enter departure city"
                                 value={departure}
@@ -250,6 +271,7 @@ export default function SearchForm() {
                             />
                             <Input
                                 id="destination"
+                                name="to"
                                 type="text"
                                 placeholder="Enter destination city"
                                 value={destination}
@@ -297,7 +319,12 @@ export default function SearchForm() {
                                     color: "#9ca3af",
                                 }}
                             />
-                            <Input id="date" type="date" />
+                            <Input
+                                id="date"
+                                type="date"
+                                name="date"
+                                onChange={(e) => setDate(e.target.value)}
+                            />
                         </FieldWrap>
                     </Group>
 
@@ -305,7 +332,12 @@ export default function SearchForm() {
                         <Label htmlFor="passengers">Number of Passengers</Label>
                         <SelectWrap>
                             <Users />
-                            <Select id="passengers" defaultValue="1">
+                            <Select
+                                id="passengers"
+                                defaultValue="1"
+                                name="passengers"
+                                onChange={(e) => setPassengers(e.target.value)}
+                            >
                                 <option value="1">1 passenger</option>
                                 <option value="2">2 passengers</option>
                                 <option value="3">3 passengers</option>
