@@ -99,6 +99,9 @@ export default function NavBar() {
                 <MenuItem>
                     <NavLink to="/publish">Publish a Ride</NavLink>
                 </MenuItem>
+                <MenuItem>
+                    <NavLink to="/eco-impact">Eco Impact</NavLink>
+                </MenuItem>
                 {user ? (
                     <>
                         <MenuItem>
