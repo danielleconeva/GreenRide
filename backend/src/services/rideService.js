@@ -1,12 +1,11 @@
 import Ride from "../models/Ride.js";
 
 export default {
-
     getAll() {
         return Ride.find().populate("driver", "username rating");
     },
 
-    search({ from, to, date }) {
+    search({ from, to, date, passengers }) {
         const query = {};
 
         if (from) {
@@ -16,18 +15,21 @@ export default {
             query.to = { $regex: to, $options: "i" };
         }
         if (date) {
-
             const dayStart = new Date(date);
             dayStart.setHours(0, 0, 0, 0);
 
             const dayEnd = new Date(date);
             dayEnd.setHours(23, 59, 59, 999);
 
-            query.departureTime = { $gte: dayStart, $lte: dayEnd };
+            query.departureDate = { $gte: dayStart, $lte: dayEnd };
+        }
+        if (passengers) {
+            query.seatsAvailable = { $gte: Number(passengers) };
         }
 
         return Ride.find(query).populate("driver", "username rating");
     },
+
 
     getById(rideId) {
         return Ride.findById(rideId).populate("driver passengers", "username rating");

@@ -2,33 +2,51 @@ import { Router } from "express";
 import { isAuth } from "../middlewares/authMiddleware.js";
 import { getErrorMessage } from "../utils/errorUtils.js";
 import rideService from "../services/rideService.js";
+import Ride from "../models/Ride.js";
+import { approxDistanceFromDuration, savedCo2PerPassenger } from "../utils/ecoUtils.js";
 
 const rideController = Router();
 
 rideController.get("/", async (req, res) => {
     try {
-        const { from, to, date } = req.query;
+        const { from, to, date, passengers } = req.query;
 
-        let rides;
-        if (from || to || date) {
-            rides = await rideService.search({ from, to, date });
-        } else {
-            rides = await rideService.getAll();
-        }
+        const rides =
+            from || to || date || passengers
+                ? await rideService.search({ from, to, date, passengers })
+                : await rideService.getAll();
 
-        res.status(200).json(rides);
+        const populated = await Ride.populate(rides, {
+            path: "driver",
+            select: "username rating car",
+        });
+
+        res.status(200).json(populated);
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Failed to fetch rides." });
     }
 });
 
 rideController.post("/", isAuth, async (req, res) => {
-    const rideData = req.body;
-    const driverId = req.user.id;
-
     try {
-        const ride = await rideService.create(rideData, driverId);
-        res.status(201).json({ message: "Ride created successfully.", ride });
+        const { driver: _ignore, ...rideData } = req.body;
+        const driverId = req.user.id;
+
+        const durationMin = Number(rideData.durationMin) || 0;
+        const distanceKm = approxDistanceFromDuration(durationMin);
+        const co2SavedKg = savedCo2PerPassenger(distanceKm);
+
+        const ride = await rideService.create(
+            {
+                ...rideData,
+                ecoImpact: { co2SavedKg },
+            },
+            driverId
+        );
+
+        await ride.populate({ path: "driver", select: "username rating car" });
+        res.status(201).json(ride);
     } catch (err) {
         res.status(400).json({ error: getErrorMessage(err) });
     }
@@ -40,6 +58,12 @@ rideController.get("/:rideId", async (req, res) => {
         if (!ride) {
             return res.status(404).json({ error: "Ride not found." });
         }
+
+        await ride.populate({
+            path: "driver",
+            select: "username rating car",
+        });
+
         res.status(200).json(ride);
     } catch (err) {
         res.status(400).json({ error: "Invalid ride ID." });
@@ -47,27 +71,37 @@ rideController.get("/:rideId", async (req, res) => {
 });
 
 rideController.put("/:rideId", isAuth, async (req, res) => {
-    const rideId = req.params.rideId;
-    const driverId = req.user.id;
-    const updates = req.body;
-
     try {
+        const rideId = req.params.rideId;
+        const driverId = req.user.id;
+        const updates = req.body;
+
         const updatedRide = await rideService.update(rideId, updates, driverId);
-        res.status(200).json({ message: "Ride updated successfully.", ride: updatedRide });
+
+        await updatedRide.populate({
+            path: "driver",
+            select: "username rating car",
+        });
+
+        res
+            .status(200)
+            .json({ message: "Ride updated successfully.", ride: updatedRide });
     } catch (err) {
         res.status(400).json({ error: getErrorMessage(err) });
     }
 });
 
-rideController.delete("/:rideId", isAuth, async (req, res) => {
-    const rideId = req.params.rideId;
-    const driverId = req.user.id;
 
+rideController.delete("/:rideId", isAuth, async (req, res) => {
     try {
+        const rideId = req.params.rideId;
+        const driverId = req.user.id;
+
         await rideService.delete(rideId, driverId);
         res.status(200).json({ message: "Ride deleted successfully." });
     } catch (err) {
-        res.status(403).json({ error: "You are not allowed to delete this ride." });
+
+        res.status(403).json({ error: getErrorMessage(err) || "You are not allowed to delete this ride." });
     }
 });
 
