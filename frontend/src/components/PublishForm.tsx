@@ -1,15 +1,21 @@
-// PublishForm.tsx
 import styled from "styled-components";
 import { useState } from "react";
-import { CityInput } from "./CityInput"; // Make sure this points to your updated CityInput
+import { CityInput } from "./CityInput";
 import { MapPin, Car, Cigarette, Snowflake, Dog, Music } from "lucide-react";
+import type { NewRide, Ride } from "../types/ride";
 
-/* --- Base styles --- */
+type PublishFormProps = {
+    onSubmit: (values: NewRide) => void;
+    submitting?: boolean;
+    serverError?: string;
+    createdRide?: Ride | null;
+};
+
 const Form = styled.form`
     max-width: 980px;
     margin: 2rem auto 4rem;
     padding: 0 1rem;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+    font-family: ${({ theme }) => theme.fonts.body};
 `;
 
 const FieldsetCard = styled.fieldset`
@@ -44,7 +50,6 @@ const FlexRow = styled.div`
     flex-wrap: wrap;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
-
     & > * {
         flex: 1;
         min-width: 200px;
@@ -67,7 +72,6 @@ const Label = styled.label`
 
 const Input = styled.input`
     height: 48px;
-    padding: 0 16px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     color: #4e4f54;
@@ -138,19 +142,19 @@ const Submit = styled.button`
     background: #14b8a6;
     cursor: pointer;
     transition: background-color 0.15s ease, transform 0.12s ease,
-        box-shadow 0.12s ease; /* + box-shadow */
+        box-shadow 0.12s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
     margin: 18px auto 0;
-    will-change: transform, box-shadow; /* perf hint */
-    transform: translateZ(0); /* avoid blur on macOS */
+    will-change: transform, box-shadow;
+    transform: translateZ(0);
 
     &:hover {
-        background: #0f766e; /* keep your existing hover color */
-        transform: translateY(-1px); /* subtle lift */
-        box-shadow: 0 8px 18px rgba(20, 184, 166, 0.25); /* soft shadow */
+        background: #0f766e;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(20, 184, 166, 0.25);
     }
 
     &:active {
@@ -158,21 +162,18 @@ const Submit = styled.button`
         box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
         transform: translateY(1px);
     }
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
 `;
 
-const PriceHelperText = styled.p`
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-top: 0.5rem;
-`;
-
-/* --- Amenities layout --- */
 const AmenityGrid = styled.div`
     display: flex;
     gap: 2rem;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
-
     @media (max-width: 800px) {
         flex-direction: column;
         gap: 1rem;
@@ -210,20 +211,58 @@ const AmenityIconWrapper = styled.span`
     font-size: 14px;
 `;
 
-/* --- Component --- */
-export default function PublishForm() {
+function minutesBetween(depTime: string, arrTime: string): number {
+    if (!depTime || !arrTime) return 0;
+    const [dh, dm] = depTime.split(":").map(Number);
+    const [ah, am] = arrTime.split(":").map(Number);
+    const dep = dh * 60 + dm;
+    let arr = ah * 60 + am;
+    if (arr < dep) arr += 24 * 60;
+    return arr - dep;
+}
+
+export default function PublishForm({
+    onSubmit,
+    submitting,
+    serverError,
+    createdRide,
+}: PublishFormProps) {
     const [from, setFrom] = useState("");
     const [to, setTo] = useState("");
 
-    function handleSubmit(e: React.FormEvent) {
+    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        // Example: const data = Object.fromEntries(new FormData(e.currentTarget) as any);
-        // send to API...
+
+        const fd = new FormData(e.currentTarget);
+
+        const departureDate = (fd.get("departureDate") as string) || "";
+        const departureTime = (fd.get("departureTime") as string) || "";
+        const arrivalTime = (fd.get("arrivalTime") as string) || "";
+
+        const durationMin = minutesBetween(departureTime, arrivalTime);
+
+        const values: NewRide = {
+            from,
+            to,
+            departureDate,
+            departureTime,
+            arrivalTime,
+            durationMin,
+            pricePerSeat: Number(fd.get("pricePerSeat") || 0),
+            seatsAvailable: Number(fd.get("seatsAvailable") || 1),
+            amenities: {
+                smokingAllowed: Boolean(fd.get("amenities.smokingAllowed")),
+                airConditioning: Boolean(fd.get("amenities.airConditioning")),
+                petsAllowed: Boolean(fd.get("amenities.petsAllowed")),
+                music: Boolean(fd.get("amenities.music")),
+            },
+        };
+
+        onSubmit(values);
     }
 
     return (
         <Form onSubmit={handleSubmit}>
-            {/* 1) Trip Details */}
             <FieldsetCard>
                 <Legend>
                     <MapPin size={20} />
@@ -236,7 +275,7 @@ export default function PublishForm() {
                         <CityInput
                             id="from"
                             name="from"
-                            placeholder="Enter departure city or address"
+                            placeholder="Enter departure city"
                             value={from}
                             onChange={setFrom}
                             $variant="publish"
@@ -248,7 +287,7 @@ export default function PublishForm() {
                         <CityInput
                             id="to"
                             name="to"
-                            placeholder="Enter destination city or address"
+                            placeholder="Enter destination city"
                             value={to}
                             onChange={setTo}
                             $variant="publish"
@@ -273,15 +312,25 @@ export default function PublishForm() {
                             id="departureTime"
                             name="departureTime"
                             type="time"
-                            defaultValue="12:30"
                         />
                     </Group>
 
                     <Group>
-                        <Label htmlFor="availableSeats">Available Seats</Label>
+                        <Label htmlFor="arrivalTime">Arrival Time</Label>
+                        <Input
+                            id="arrivalTime"
+                            name="arrivalTime"
+                            type="time"
+                        />
+                    </Group>
+                </FlexRow>
+
+                <FlexRow>
+                    <Group>
+                        <Label htmlFor="seatsAvailable">Available Seats</Label>
                         <Select
-                            id="availableSeats"
-                            name="availableSeats"
+                            id="seatsAvailable"
+                            name="seatsAvailable"
                             defaultValue="1"
                         >
                             <option value="1">👤 1 seat</option>
@@ -291,9 +340,7 @@ export default function PublishForm() {
                             <option value="5">👤 5 seats</option>
                         </Select>
                     </Group>
-                </FlexRow>
 
-                <FlexRow>
                     <Group>
                         <Label htmlFor="pricePerSeat">Price per seat</Label>
                         <Input
@@ -304,14 +351,10 @@ export default function PublishForm() {
                             min="0"
                             placeholder="Enter price per seat"
                         />
-                        <PriceHelperText>
-                            Set the amount each passenger pays for one seat.
-                        </PriceHelperText>
                     </Group>
                 </FlexRow>
             </FieldsetCard>
 
-            {/* 2) Car Information */}
             <FieldsetCard>
                 <Legend>
                     <Car size={20} />
@@ -353,15 +396,14 @@ export default function PublishForm() {
                 </FlexRow>
             </FieldsetCard>
 
-            {/* 3) Amenities & Preferences */}
             <FieldsetCard>
                 <Legend>Amenities & Preferences</Legend>
 
                 <AmenityGrid>
                     <AmenityItem>
                         <AmenityCheckbox
-                            id="amenity-smokingAllowed"
-                            name="amenities[smokingAllowed]"
+                            id="amenities.smokingAllowed"
+                            name="amenities.smokingAllowed"
                         />
                         <AmenityIconWrapper>
                             <Cigarette size={16} />
@@ -371,8 +413,8 @@ export default function PublishForm() {
 
                     <AmenityItem>
                         <AmenityCheckbox
-                            id="amenity-airConditioning"
-                            name="amenities[airConditioning]"
+                            id="amenities.airConditioning"
+                            name="amenities.airConditioning"
                         />
                         <AmenityIconWrapper>
                             <Snowflake size={16} />
@@ -382,8 +424,8 @@ export default function PublishForm() {
 
                     <AmenityItem>
                         <AmenityCheckbox
-                            id="amenity-petsAllowed"
-                            name="amenities[petsAllowed]"
+                            id="amenities.petsAllowed"
+                            name="amenities.petsAllowed"
                         />
                         <AmenityIconWrapper>
                             <Dog size={16} />
@@ -393,8 +435,8 @@ export default function PublishForm() {
 
                     <AmenityItem>
                         <AmenityCheckbox
-                            id="amenity-music"
-                            name="amenities[music]"
+                            id="amenities.music"
+                            name="amenities.music"
                         />
                         <AmenityIconWrapper>
                             <Music size={16} />
@@ -413,7 +455,21 @@ export default function PublishForm() {
                 </Group>
             </FieldsetCard>
 
-            <Submit type="submit">+ Publish a Ride</Submit>
+            <Submit type="submit" disabled={submitting}>
+                {submitting ? "Publishing…" : "+ Publish a Ride"}
+            </Submit>
+
+            {serverError && (
+                <p
+                    style={{
+                        color: "crimson",
+                        marginTop: ".75rem",
+                        textAlign: "center",
+                    }}
+                >
+                    {serverError}
+                </p>
+            )}
         </Form>
     );
 }

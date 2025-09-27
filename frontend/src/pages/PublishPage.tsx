@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import PublishForm from "../components/PublishForm";
+import useCreateRide from "../hooks/useCreateRide";
+import type { NewRide } from "../types/ride";
+import { useNavigate } from "react-router-dom";
 
 const MainWrapper = styled.div`
     font-family: ${({ theme }) => theme.fonts.body};
@@ -33,6 +36,17 @@ const IntroText = styled.div`
     }
 `;
 export default function PublishPage() {
+    const navigate = useNavigate();
+    const { mutate, isPending, isSuccess, error, data } = useCreateRide();
+
+    function handleSubmit(values: NewRide) {
+        mutate(values, {
+            onSuccess: () => {
+                navigate("/");
+            },
+        });
+    }
+
     return (
         <>
             <MainWrapper>
@@ -44,7 +58,12 @@ export default function PublishPage() {
                         way.
                     </p>
                 </IntroText>
-                <PublishForm></PublishForm>
+                <PublishForm
+                    onSubmit={handleSubmit}
+                    submitting={isPending}
+                    serverError={error?.message}
+                    createdRide={isSuccess ? data : null}
+                ></PublishForm>
             </MainWrapper>
         </>
     );

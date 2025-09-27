@@ -1,4 +1,3 @@
-// src/types/ride.ts
 export interface Ride {
     _id: string;
     from: string;
@@ -6,7 +5,6 @@ export interface Ride {
     departureDate: string;
     departureTime: string;
     arrivalTime: string;
-    distanceKm: number;
     durationMin: number;
     pricePerSeat: number;
     seatsAvailable: number;
@@ -34,4 +32,22 @@ export interface RideSearchParams {
     to: string;
     date: string;
     passengers: string;
+}
+
+export interface NewRide {
+    from: string;
+    to: string;
+    departureDate: string;
+    departureTime: string;
+    arrivalTime: string;
+    durationMin: number;
+    pricePerSeat: number;
+    seatsAvailable: number;
+
+    amenities: {
+        airConditioning: boolean;
+        music: boolean;
+        smokingAllowed: boolean;
+        petsAllowed: boolean;
+    };
 }

@@ -1,4 +1,3 @@
-// CityInput.tsx
 import { useState } from "react";
 import styled from "styled-components";
 import { MapPin } from "lucide-react";
@@ -9,14 +8,13 @@ const Wrapper = styled.div`
 `;
 
 const Input = styled.input<{ $variant?: "default" | "publish" }>`
-    width: ${(props) => (props.$variant === "publish" ? "80%" : "100%")};
+    width: ${(props) => (props.$variant === "publish" ? "87%" : "100%")};
     height: ${(props) => (props.$variant === "publish" ? "48px" : "44px")};
     border-radius: 8px;
     border: 1px solid #d1d5db;
     padding: ${(props) =>
         props.$variant === "publish" ? "0 16px 0 40px" : "0 12px 0 40px"};
-    font-size: ${(props) =>
-        props.$variant === "publish" ? "0.875rem" : "0.95rem"};
+    font-size: 0.95rem;
     outline: none;
     color: #111827;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -115,7 +113,7 @@ export function CityInput({
                     {filtered.map((city) => (
                         <SuggestionItem
                             key={city}
-                            onMouseDown={(e) => e.preventDefault()} // keep focus in input
+                            onMouseDown={(e) => e.preventDefault()}
                             onClick={() => {
                                 onChange(city);
                                 setShowSuggestions(false);
@@ -126,7 +124,6 @@ export function CityInput({
                     ))}
                 </Suggestions>
             )}
-            {loading && <p style={{ fontSize: "0.8rem" }}>Loading cities…</p>}
         </Wrapper>
     );
 }

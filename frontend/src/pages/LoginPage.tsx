@@ -7,6 +7,7 @@ import { login } from "../store/authSlice";
 
 import LoginForm from "../components/LoginForm";
 import { useLoginForm } from "../hooks/useLoginForm";
+import { useNavigate } from "react-router-dom";
 
 const LeafIcon = styled(Leaf)`
     background: ${({ theme }) => theme.colors.gradientHero};
@@ -84,6 +85,7 @@ const IntroText = styled.div`
 `;
 
 export default function LoginPage() {
+    const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
     const { loading, error: serverError } = useSelector(
         (state: RootState) => state.auth
@@ -100,8 +102,12 @@ export default function LoginPage() {
         toggleShowPassword,
         handleSubmit,
     } = useLoginForm({
-        onValidSubmit: ({ email, password }) =>
-            dispatch(login({ email, password })),
+        onValidSubmit: async ({ email, password }) => {
+            try {
+                await dispatch(login({ email, password })).unwrap();
+                navigate("/");
+            } catch {}
+        },
     });
 
     return (
