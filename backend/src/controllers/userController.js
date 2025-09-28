@@ -47,4 +47,39 @@ userController.get("/profile/eco", isAuth, async (req, res) => {
     }
 });
 
+import User from "../models/User.js";
+
+// ...existing routes...
+
+// Public driver profile (safe fields only)
+userController.get("/:userId/public", async (req, res) => {
+    try {
+        const id = String(req.params.userId || "");
+        if (!id) return res.status(400).json({ error: "Missing user id." });
+
+        const user = await User.findById(id)
+            .select("username rating tripsCompleted car ecoStats createdAt")
+            .lean();
+
+        if (!user) return res.status(404).json({ error: "User not found." });
+
+        // Normalize id field for frontend
+        const payload = {
+            id: String(user._id),
+            username: user.username,
+            rating: user.rating ?? 0,
+            tripsCompleted: user.tripsCompleted ?? 0,
+            car: user.car ?? null,
+            ecoStats: user.ecoStats ?? { totalRides: 0, co2SavedKg: 0, moneySaved: 0 },
+            createdAt: user.createdAt,
+        };
+
+        return res.status(200).json({ user: payload });
+    } catch (err) {
+        console.error("GET /users/:userId/public error:", err);
+        return res.status(500).json({ error: "Failed to load user." });
+    }
+});
+
+
 export default userController;

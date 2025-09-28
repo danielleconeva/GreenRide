@@ -22,10 +22,16 @@ const rideSchema = new Schema(
         },
 
         ecoImpact: {
-            co2SavedKg: { type: Number, default: 0 },
+            perPersonKg: { type: Number, default: 0 },
+            totalKg: { type: Number, default: 0 },
         },
 
         passengers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        notes: {
+            type: String,
+            trim: true,
+            maxlength: [300, "Notes cannot exceed 300 characters."]
+        },
     },
     { timestamps: true }
 );

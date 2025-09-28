@@ -3,7 +3,7 @@ import { isAuth } from "../middlewares/authMiddleware.js";
 import { getErrorMessage } from "../utils/errorUtils.js";
 import rideService from "../services/rideService.js";
 import Ride from "../models/Ride.js";
-import { approxDistanceFromDuration, savedCo2PerPassenger } from "../utils/ecoUtils.js";
+import { approxDistanceFromDuration, ecoFromOccupants } from "../utils/ecoUtils.js";
 
 const rideController = Router();
 
@@ -35,12 +35,15 @@ rideController.post("/", isAuth, async (req, res) => {
 
         const durationMin = Number(rideData.durationMin) || 0;
         const distanceKm = approxDistanceFromDuration(durationMin);
-        const co2SavedKg = savedCo2PerPassenger(distanceKm);
+
+        const occupants = 1;
+        const ecoImpact = ecoFromOccupants(distanceKm, occupants);
 
         const ride = await rideService.create(
             {
                 ...rideData,
-                ecoImpact: { co2SavedKg },
+                distanceKm,
+                ecoImpact,
             },
             driverId
         );
@@ -59,11 +62,7 @@ rideController.get("/:rideId", async (req, res) => {
             return res.status(404).json({ error: "Ride not found." });
         }
 
-        await ride.populate({
-            path: "driver",
-            select: "username rating car",
-        });
-
+        await ride.populate({ path: "driver", select: "username rating car" });
         res.status(200).json(ride);
     } catch (err) {
         res.status(400).json({ error: "Invalid ride ID." });
@@ -78,19 +77,13 @@ rideController.put("/:rideId", isAuth, async (req, res) => {
 
         const updatedRide = await rideService.update(rideId, updates, driverId);
 
-        await updatedRide.populate({
-            path: "driver",
-            select: "username rating car",
-        });
+        await updatedRide.populate({ path: "driver", select: "username rating car" });
 
-        res
-            .status(200)
-            .json({ message: "Ride updated successfully.", ride: updatedRide });
+        res.status(200).json({ message: "Ride updated successfully.", ride: updatedRide });
     } catch (err) {
         res.status(400).json({ error: getErrorMessage(err) });
     }
 });
-
 
 rideController.delete("/:rideId", isAuth, async (req, res) => {
     try {
@@ -100,7 +93,6 @@ rideController.delete("/:rideId", isAuth, async (req, res) => {
         await rideService.delete(rideId, driverId);
         res.status(200).json({ message: "Ride deleted successfully." });
     } catch (err) {
-
         res.status(403).json({ error: getErrorMessage(err) || "You are not allowed to delete this ride." });
     }
 });

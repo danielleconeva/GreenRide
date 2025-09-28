@@ -7,12 +7,13 @@ const bookingController = Router();
 
 bookingController.post("/:rideId", isAuth, async (req, res) => {
     const passengerId = req.user.id;
-    const { seatsBooked, noteToDriver } = req.body;
+    const seatsBooked = Math.max(1, Number(req.body.seatsBooked) || 1);
+    const noteToDriver = req.body.noteToDriver;
 
     try {
         const booking = await bookingService.create(req.params.rideId, passengerId, {
             seatsBooked,
-            noteToDriver
+            noteToDriver,
         });
         res.status(201).json({ message: "Booking confirmed.", booking });
     } catch (err) {
@@ -22,7 +23,6 @@ bookingController.post("/:rideId", isAuth, async (req, res) => {
 
 bookingController.delete("/:bookingId", isAuth, async (req, res) => {
     const passengerId = req.user.id;
-
     try {
         const booking = await bookingService.cancel(req.params.bookingId, passengerId);
         res.status(200).json({ message: "Booking cancelled.", booking });
