@@ -21,12 +21,11 @@ const rideSchema = new Schema(
             petsAllowed: { type: Boolean, default: false },
         },
 
+        passengers: [{ type: Schema.Types.ObjectId, ref: "User", default: [] }],
         ecoImpact: {
             perPersonKg: { type: Number, default: 0 },
             totalKg: { type: Number, default: 0 },
         },
-
-        passengers: [{ type: Schema.Types.ObjectId, ref: "User" }],
         notes: {
             type: String,
             trim: true,

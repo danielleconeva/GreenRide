@@ -5,13 +5,12 @@ import bookingService from "../services/bookingService.js";
 
 const bookingController = Router();
 
-bookingController.post("/:rideId", isAuth, async (req, res) => {
+bookingController.post("/", isAuth, async (req, res) => {
     const passengerId = req.user.id;
-    const seatsBooked = Math.max(1, Number(req.body.seatsBooked) || 1);
-    const noteToDriver = req.body.noteToDriver;
+    const { rideId, seatsBooked = 1, noteToDriver } = req.body;
 
     try {
-        const booking = await bookingService.create(req.params.rideId, passengerId, {
+        const booking = await bookingService.create(rideId, passengerId, {
             seatsBooked,
             noteToDriver,
         });
@@ -40,13 +39,34 @@ bookingController.get("/my", isAuth, async (req, res) => {
     }
 });
 
-bookingController.get("/ride/:rideId", isAuth, async (req, res) => {
+/** GET BY ID — GET /api/bookings/:bookingId
+ *  Place this AFTER /my and /ride/:rideId so "my" doesn't match :bookingId
+ */
+bookingController.get("/:bookingId", isAuth, async (req, res) => {
     try {
-        const bookings = await bookingService.getByRide(req.params.rideId, req.user.id);
-        res.status(200).json(bookings);
+        const booking = await Booking.findById(req.params.bookingId)
+            .populate({
+                path: "ride",
+                populate: { path: "driver", select: "username rating" },
+            })
+            .populate("passenger", "username email");
+
+        if (!booking) return res.status(404).json({ error: "Booking not found." });
+
+        const isPassenger =
+            String(booking.passenger?._id || booking.passenger) === req.user.id;
+        const isDriver =
+            String(booking.ride?.driver?._id || booking.ride?.driver) === req.user.id;
+
+        if (!isPassenger && !isDriver) {
+            return res.status(403).json({ error: "Forbidden" });
+        }
+
+        res.status(200).json(booking);
     } catch (err) {
-        res.status(403).json({ error: getErrorMessage(err) });
+        res.status(400).json({ error: getErrorMessage(err) });
     }
 });
+
 
 export default bookingController;
