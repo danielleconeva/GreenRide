@@ -8,7 +8,7 @@ const Card = styled.div`
     background: #fff;
     border: 1px solid #e5e7eb;
     border-radius: 16px;
-    padding: 2rem; /* Equal padding on all sides */
+    padding: 2rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     margin-top: 0;
@@ -17,12 +17,12 @@ const Card = styled.div`
 const Form = styled.form`
     display: block;
     width: 900px;
-    margin: 0 auto; /* Center the form within the card */
+    margin: 0 auto;
 `;
 
 const Group = styled.div`
     display: block;
-    margin-bottom: 1.5rem; /* Consistent spacing */
+    margin-bottom: 1.5rem;
     flex: 1 1 300px;
 `;
 
@@ -31,7 +31,6 @@ const Row = styled.div`
     flex-direction: row;
     gap: 2rem;
 
-    /* Ensure equal width columns */
     > ${Group} {
         flex: 1;
     }
@@ -61,7 +60,7 @@ const Input = styled.input`
     padding: 0 12px 0 40px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     outline: none;
-    box-sizing: border-box; /* Ensures consistent sizing */
+    box-sizing: border-box;
 
     &::placeholder {
         color: #9ca3af;
@@ -133,7 +132,7 @@ const SelectWrap = styled.div`
 const Select = styled.select`
     display: block;
     width: 100%;
-    height: 44px; /* Same height as Input */
+    height: 44px;
     border-radius: 8px;
     border: 1px solid #d1d5db;
     background: #fff;
@@ -143,7 +142,7 @@ const Select = styled.select`
     outline: none;
     appearance: none;
     cursor: pointer;
-    box-sizing: border-box; /* Ensures consistent sizing with inputs */
+    box-sizing: border-box;
 
     &:focus {
         border-color: #14b8a6;
@@ -205,7 +204,7 @@ export default function SearchForm() {
             passengers,
         });
 
-        navigate(`/results?${params.toString()}`);
+        navigate(`/rides?${params.toString()}`);
     };
 
     return (

@@ -78,7 +78,7 @@ export function CityInput({
     onChange: (val: string) => void;
     $variant?: "default" | "publish";
 }) {
-    const { cities, loading } = useCities("Bulgaria");
+    const { cities } = useCities("Bulgaria");
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     const filtered =

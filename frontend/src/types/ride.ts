@@ -15,7 +15,8 @@ export interface Ride {
         petsAllowed: boolean;
     };
     ecoImpact: {
-        co2SavedKg: number;
+        perPersonKg: number;
+        totalKg: number;
     };
     driver: {
         _id: string;
@@ -23,6 +24,7 @@ export interface Ride {
         rating?: number;
     };
     passengers: Array<{ _id: string; username: string }>;
+    notes?: string;
     createdAt: string;
     updatedAt: string;
 }
@@ -50,4 +52,5 @@ export interface NewRide {
         smokingAllowed: boolean;
         petsAllowed: boolean;
     };
+    notes?: string;
 }

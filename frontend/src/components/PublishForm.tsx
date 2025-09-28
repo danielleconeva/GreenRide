@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { CityInput } from "./CityInput";
-import { MapPin, Car, Cigarette, Snowflake, Dog, Music } from "lucide-react";
+import { MapPin, Cigarette, Snowflake, Dog, Music } from "lucide-react";
 import type { NewRide, Ride } from "../types/ride";
 
 type PublishFormProps = {
@@ -235,11 +235,21 @@ export default function PublishForm({
 
         const fd = new FormData(e.currentTarget);
 
-        const departureDate = (fd.get("departureDate") as string) || "";
-        const departureTime = (fd.get("departureTime") as string) || "";
-        const arrivalTime = (fd.get("arrivalTime") as string) || "";
+        // helpers
+        const getStr = (name: string) => {
+            const v = fd.get(name);
+            return typeof v === "string" ? v : "";
+        };
+        const getNum = (name: string, fallback = 0) => {
+            const n = Number(getStr(name));
+            return Number.isFinite(n) ? n : fallback;
+        };
 
+        const departureDate = getStr("departureDate");
+        const departureTime = getStr("departureTime");
+        const arrivalTime = getStr("arrivalTime");
         const durationMin = minutesBetween(departureTime, arrivalTime);
+        const notes = getStr("notes").trim();
 
         const values: NewRide = {
             from,
@@ -248,14 +258,15 @@ export default function PublishForm({
             departureTime,
             arrivalTime,
             durationMin,
-            pricePerSeat: Number(fd.get("pricePerSeat") || 0),
-            seatsAvailable: Number(fd.get("seatsAvailable") || 1),
+            pricePerSeat: getNum("pricePerSeat", 0),
+            seatsAvailable: getNum("seatsAvailable", 1),
             amenities: {
                 smokingAllowed: Boolean(fd.get("amenities.smokingAllowed")),
                 airConditioning: Boolean(fd.get("amenities.airConditioning")),
                 petsAllowed: Boolean(fd.get("amenities.petsAllowed")),
                 music: Boolean(fd.get("amenities.music")),
             },
+            ...(notes ? { notes } : {}),
         };
 
         onSubmit(values);
@@ -351,47 +362,6 @@ export default function PublishForm({
                             min="0"
                             placeholder="Enter price per seat"
                         />
-                    </Group>
-                </FlexRow>
-            </FieldsetCard>
-
-            <FieldsetCard>
-                <Legend>
-                    <Car size={20} />
-                    Car Information
-                </Legend>
-
-                <FlexRow>
-                    <Group>
-                        <Label htmlFor="brand">Brand</Label>
-                        <Input
-                            id="brand"
-                            name="brand"
-                            placeholder="e.g., Toyota"
-                        />
-                    </Group>
-
-                    <Group>
-                        <Label htmlFor="model">Model</Label>
-                        <Input
-                            id="model"
-                            name="model"
-                            placeholder="e.g., Camry"
-                        />
-                    </Group>
-
-                    <Group>
-                        <Label htmlFor="color">Color</Label>
-                        <Input
-                            id="color"
-                            name="color"
-                            placeholder="e.g., Blue"
-                        />
-                    </Group>
-
-                    <Group>
-                        <Label htmlFor="year">Year</Label>
-                        <Input id="year" name="year" placeholder="e.g., 2020" />
                     </Group>
                 </FlexRow>
             </FieldsetCard>
