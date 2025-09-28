@@ -80,6 +80,7 @@ const Input = styled.input`
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     background: #fff;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-family: ${({ theme }) => theme.fonts.body};
 
     &:focus {
         outline: none;
@@ -98,9 +99,10 @@ const Select = styled.select`
     border: 1px solid #d1d5db;
     border-radius: 8px;
     background: #fff;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-family: ${({ theme }) => theme.fonts.body};
 
     &:focus {
         outline: none;
@@ -344,11 +346,11 @@ export default function PublishForm({
                             name="seatsAvailable"
                             defaultValue="1"
                         >
-                            <option value="1">👤 1 seat</option>
-                            <option value="2">👤 2 seats</option>
-                            <option value="3">👤 3 seats</option>
-                            <option value="4">👤 4 seats</option>
-                            <option value="5">👤 5 seats</option>
+                            <option value="1"> 1 seat</option>
+                            <option value="2"> 2 seats</option>
+                            <option value="3"> 3 seats</option>
+                            <option value="4"> 4 seats</option>
+                            <option value="5"> 5 seats</option>
                         </Select>
                     </Group>
 
@@ -358,8 +360,6 @@ export default function PublishForm({
                             id="pricePerSeat"
                             name="pricePerSeat"
                             type="number"
-                            step="0.01"
-                            min="0"
                             placeholder="Enter price per seat"
                         />
                     </Group>

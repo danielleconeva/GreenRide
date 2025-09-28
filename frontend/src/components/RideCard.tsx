@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { Ride } from "../types/ride";
 import {
     Calendar as CalendarIcon,
@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import useDriver from "../hooks/useDriver";
 
-const Card = styled(Link)`
+const Card = styled.div`
     display: flex;
     gap: 24px;
     align-items: center;
@@ -35,7 +35,7 @@ const DriverCol = styled.div`
     display: flex;
     align-items: center;
     gap: 12px;
-    min-width: 180px;
+    min-width: 140px;
 
     .avatar {
         width: 48px;
@@ -94,6 +94,7 @@ const Timeline = styled.div`
         font-size: 1.1rem;
         font-weight: 700;
         color: #111827;
+        margin-bottom: 0.4rem;
     }
     .date {
         font-size: 0.85rem;
@@ -261,6 +262,8 @@ const RightCol = styled.div`
 type Props = { ride: Ride };
 
 export default function RideCard({ ride }: Props) {
+    const navigate = useNavigate();
+
     const dateStr = ride.departureDate
         ? new Date(ride.departureDate).toLocaleDateString("en-GB", {
               day: "numeric",
@@ -294,13 +297,18 @@ export default function RideCard({ ride }: Props) {
           (car.year ? ` (${car.year})` : "")
         : "";
 
+    const handleBookClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        navigate(`/booking/${ride._id}`, { state: { ride } });
+    };
+
     return (
-        <Card to={`/rides/${ride._id}`}>
+        <Card>
             <DriverCol>
                 <div className="avatar">{driverInitials || "D"}</div>
                 <div className="driverInfo">
                     <div className="name">{displayName}</div>
-
                     <div className="rating">
                         {typeof tripsCompleted === "number"
                             ? `${tripsCompleted} trips`
@@ -375,7 +383,12 @@ export default function RideCard({ ride }: Props) {
                 <div className="seats">
                     <Users /> {ride.seatsAvailable} of {totalSeats} left
                 </div>
-                <button className="cta" type="button">
+                <button
+                    className="cta"
+                    type="button"
+                    onClick={handleBookClick}
+                    aria-label={`Book ride from ${ride.from} to ${ride.to}`}
+                >
                     Book Now
                 </button>
             </RightCol>

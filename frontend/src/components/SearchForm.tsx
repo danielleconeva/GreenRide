@@ -61,9 +61,11 @@ const Input = styled.input`
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     outline: none;
     box-sizing: border-box;
+    font-family: ${({ theme }) => theme.fonts.body};
 
     &::placeholder {
         color: #9ca3af;
+        font-family: ${({ theme }) => theme.fonts.body};
     }
 
     &:focus {
@@ -143,6 +145,7 @@ const Select = styled.select`
     appearance: none;
     cursor: pointer;
     box-sizing: border-box;
+    font-family: ${({ theme }) => theme.fonts.body};
 
     &:focus {
         border-color: #14b8a6;

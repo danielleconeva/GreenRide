@@ -74,19 +74,26 @@ const RangeContainer = styled.div`
     padding: 0 4px;
 `;
 
+// replace ONLY the Range styled component with this:
 const Range = styled.input.attrs({ type: "range" })`
     width: 100%;
     height: 6px;
     border-radius: 3px;
-    background: #e5e7eb;
+    background: #e5e7eb; /* gets overridden by your inline gradient */
     outline: none;
     appearance: none;
     cursor: pointer;
 
+    /* WebKit track */
     &::-webkit-slider-runnable-track {
         height: 6px;
         border-radius: 3px;
         background: transparent;
+    }
+
+    /* WebKit thumb */
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
         appearance: none;
         height: 20px;
         width: 20px;
@@ -95,14 +102,18 @@ const Range = styled.input.attrs({ type: "range" })`
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         border: 3px solid #fff;
+        /* centers the 20px thumb on a 6px track: (20-6)/2 = 7 */
         margin-top: -7px;
     }
 
+    /* Firefox track */
     &::-moz-range-track {
         height: 6px;
         border-radius: 3px;
         background: transparent;
     }
+
+    /* Firefox thumb */
     &::-moz-range-thumb {
         height: 20px;
         width: 20px;

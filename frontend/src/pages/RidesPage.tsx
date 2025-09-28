@@ -22,8 +22,9 @@ const Header = styled.div`
 
     h1 {
         margin: 0;
-        font-size: 2rem;
+        font-size: 2.2rem;
         margin-bottom: 0.4rem;
+        color: ${({ theme }) => theme.colors.foreground};
     }
     .meta {
         color: #6b7280;

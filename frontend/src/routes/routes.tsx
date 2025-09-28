@@ -26,7 +26,10 @@ export const router = createBrowserRouter([
             { path: "rides/:id", element: <RideDetailsPage /> },
             { path: "rides/:id/edit", element: <RideEditPage /> },
             { path: "booking/:rideId", element: <BookingDetailsPage /> },
-            { path: "booking-confirmed", element: <BookingConfirmedPage /> },
+            {
+                path: "booking-confirmed/:rideId",
+                element: <BookingConfirmedPage />,
+            },
             { path: "publish", element: <PublishPage /> },
             { path: "eco-impact", element: <EcoImpactPage /> },
             { path: "login", element: <LoginPage /> },
