@@ -34,7 +34,7 @@ const Divider = styled.div`
 `;
 
 const TotalRow = styled(Row)`
-    font-weight: 600;
+    font-weight: 700;
     color: ${({ theme }) => theme.colors.primary};
     font-size: 1.4rem;
     padding: 12px 0;
