@@ -2,6 +2,7 @@ import { Router } from "express";
 import { isAuth } from "../middlewares/authMiddleware.js";
 import userService from "../services/userService.js";
 import { getErrorMessage } from "../utils/errorUtils.js";
+import User from "../models/User.js";
 
 const userController = Router();
 
@@ -47,27 +48,25 @@ userController.get("/profile/eco", isAuth, async (req, res) => {
     }
 });
 
-import User from "../models/User.js";
 
-// ...existing routes...
 
-// Public driver profile (safe fields only)
 userController.get("/:userId/public", async (req, res) => {
     try {
         const id = String(req.params.userId || "");
         if (!id) return res.status(400).json({ error: "Missing user id." });
 
         const user = await User.findById(id)
-            .select("username rating tripsCompleted car ecoStats createdAt")
+            .select("username rating phoneNumber tripsCompleted car ecoStats createdAt")
             .lean();
 
         if (!user) return res.status(404).json({ error: "User not found." });
 
-        // Normalize id field for frontend
+
         const payload = {
             id: String(user._id),
             username: user.username,
             rating: user.rating ?? 0,
+            phoneNumber: user.phoneNumber ?? null,
             tripsCompleted: user.tripsCompleted ?? 0,
             car: user.car ?? null,
             ecoStats: user.ecoStats ?? { totalRides: 0, co2SavedKg: 0, moneySaved: 0 },
