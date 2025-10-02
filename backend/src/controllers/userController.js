@@ -18,8 +18,8 @@ userController.get("/profile/full", isAuth, async (req, res) => {
         const user = await userService.getById(id);
         if (!user) return res.status(404).json({ error: "User not found." });
 
-        const merged = { ...req.user, ...user };
-        return res.status(200).json({ user: merged });
+        return res.status(200).json({ user });
+
     } catch (err) {
         console.error("GET /profile/full error:", err);
         return res.status(500).json({ error: "Failed to load full profile." });

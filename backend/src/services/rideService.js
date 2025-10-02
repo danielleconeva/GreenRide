@@ -32,8 +32,11 @@ export default {
 
 
     getById(rideId) {
-        return Ride.findById(rideId).populate("driver passengers", "username rating");
+        return Ride.findById(rideId)
+            .populate({ path: "driver", select: "username rating car" })
+            .populate({ path: "passengers", select: "username rating" });
     },
+
 
     create(rideData, driverId) {
         return Ride.create({ ...rideData, driver: driverId });
@@ -64,5 +67,10 @@ export default {
         }
 
         return Ride.findByIdAndDelete(rideId);
-    }
+    },
+
+    getByDriver(driverId) {
+        return Ride.find({ driver: driverId }).populate("driver", "username rating car");
+    },
+
 };

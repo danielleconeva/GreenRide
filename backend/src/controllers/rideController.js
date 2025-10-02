@@ -16,10 +16,11 @@ rideController.get("/", async (req, res) => {
                 ? await rideService.search({ from, to, date, passengers })
                 : await rideService.getAll();
 
-        const populated = await Ride.populate(rides, {
-            path: "driver",
-            select: "username rating car",
-        });
+        const populated = await Ride.populate(rides, [
+            { path: "driver", select: "username rating car" },
+            { path: "passengers", select: "username rating" }
+        ]);
+
 
         res.status(200).json(populated);
     } catch (err) {
@@ -54,6 +55,14 @@ rideController.post("/", isAuth, async (req, res) => {
         res.status(400).json({ error: getErrorMessage(err) });
     }
 });
+rideController.get("/my", isAuth, async (req, res) => {
+    try {
+        const rides = await rideService.getByDriver(req.user.id);
+        res.status(200).json(rides);
+    } catch (err) {
+        res.status(400).json({ error: "Failed to fetch my rides." });
+    }
+});
 
 rideController.get("/:rideId", async (req, res) => {
     try {
@@ -62,7 +71,10 @@ rideController.get("/:rideId", async (req, res) => {
             return res.status(404).json({ error: "Ride not found." });
         }
 
-        await ride.populate({ path: "driver", select: "username rating car" });
+        await ride.populate([
+            { path: "driver", select: "username rating car" },
+            { path: "passengers", select: "username rating" }
+        ]);
         res.status(200).json(ride);
     } catch (err) {
         res.status(400).json({ error: "Invalid ride ID." });

@@ -39,17 +39,19 @@ bookingController.get("/my", isAuth, async (req, res) => {
     }
 });
 
-/** GET BY ID — GET /api/bookings/:bookingId
- *  Place this AFTER /my and /ride/:rideId so "my" doesn't match :bookingId
- */
+
 bookingController.get("/:bookingId", isAuth, async (req, res) => {
     try {
         const booking = await Booking.findById(req.params.bookingId)
             .populate({
                 path: "ride",
-                populate: { path: "driver", select: "username rating" },
+                populate: [
+                    { path: "driver", select: "username rating" },
+                    { path: "passengers", select: "username rating" }
+                ]
             })
             .populate("passenger", "username email");
+
 
         if (!booking) return res.status(404).json({ error: "Booking not found." });
 

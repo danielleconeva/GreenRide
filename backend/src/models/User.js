@@ -39,9 +39,11 @@ const userSchema = new Schema({
     },
 
     car: {
+
         make: { type: String, trim: true },
         model: { type: String, trim: true },
-        year: { type: Number, min: 1900, max: new Date().getFullYear() },
+        year: { type: String, trim: true },
+        color: { type: String, trim: true },
         licensePlate: { type: String, trim: true }
     },
 
