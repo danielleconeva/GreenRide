@@ -1,10 +1,11 @@
 import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { useProfile } from "../../hooks/useProfile";
 
 const Card = styled.section`
     background: #fff;
     border: 1px solid #e5e7eb;
     font-family: ${({ theme }) => theme.fonts.body};
-    background: #fff;
     border-radius: 16px;
     padding: 2rem;
     padding-top: 1rem;
@@ -68,6 +69,50 @@ type Props = {
 };
 
 export default function PersonalInfo({ isEditing }: Props) {
+    const { data: profileUser, refetch } = useProfile();
+
+    const [formData, setFormData] = useState({
+        username: "",
+        email: "",
+        phoneNumber: "",
+        bio: "",
+    });
+
+    useEffect(() => {
+        if (profileUser) {
+            setFormData({
+                username: profileUser.username || "",
+                email: profileUser.email || "",
+                phoneNumber: profileUser.phoneNumber || "",
+                bio: profileUser.bio || "",
+            });
+        }
+    }, [profileUser]);
+
+    async function handleChange(field: keyof typeof formData, value: string) {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+
+        if (isEditing) {
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/api/users/profile",
+                    {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify({ [field]: value }),
+                    }
+                );
+
+                if (!response.ok) throw new Error("Failed to update profile");
+
+                await refetch();
+            } catch (err) {
+                console.error("Profile update failed:", err);
+            }
+        }
+    }
+
     return (
         <Card>
             <Title>Personal Information</Title>
@@ -76,32 +121,40 @@ export default function PersonalInfo({ isEditing }: Props) {
                     <Label>Full Name</Label>
                     <Input
                         type="text"
-                        defaultValue="John Doe"
+                        value={formData.username}
                         disabled={!isEditing}
+                        onChange={(e) =>
+                            handleChange("username", e.target.value)
+                        }
                     />
                 </Group>
                 <Group>
                     <Label>Email</Label>
                     <Input
                         type="email"
-                        defaultValue="john.doe@email.com"
+                        value={formData.email}
                         disabled={!isEditing}
+                        onChange={(e) => handleChange("email", e.target.value)}
                     />
                 </Group>
                 <Group>
                     <Label>Phone Number</Label>
                     <Input
                         type="tel"
-                        defaultValue="+1 (555) 987-6543"
+                        value={formData.phoneNumber}
                         disabled={!isEditing}
+                        onChange={(e) =>
+                            handleChange("phoneNumber", e.target.value)
+                        }
                     />
                 </Group>
                 <Group style={{ gridColumn: "1 / -1" }}>
                     <Label>Bio</Label>
                     <Textarea
                         rows={3}
-                        defaultValue="Eco-conscious traveler who loves meeting new people on the road."
+                        value={formData.bio}
                         disabled={!isEditing}
+                        onChange={(e) => handleChange("bio", e.target.value)}
                     />
                 </Group>
             </Form>

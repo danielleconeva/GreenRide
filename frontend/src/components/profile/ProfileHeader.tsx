@@ -1,5 +1,8 @@
+import { Sprout, Car, User as UserIcon, Edit2 } from "lucide-react";
 import styled from "styled-components";
-import { Sprout, Car, Edit2 } from "lucide-react";
+import { useProfile } from "../../hooks/useProfile";
+import { useMyBookings } from "../../hooks/useBookings";
+import { useAllRides } from "../../hooks/useAllRides";
 
 const Card = styled.section`
     font-family: ${({ theme }) => theme.fonts.body};
@@ -86,11 +89,11 @@ const Badges = styled.div`
     flex-wrap: wrap;
 `;
 
-const Badge = styled.span<{ bg?: string }>`
+const Badge = styled.span<{ $bg?: string }>`
     display: flex;
     align-items: center;
     gap: 6px;
-    background: ${({ bg }) => bg || "#f3f4f6"};
+    background: ${({ $bg }) => $bg || "#f3f4f6"};
     color: #111827;
     padding: 6px 12px;
     font-size: 0.8rem;
@@ -132,17 +135,49 @@ const EditButton = styled.button`
 
 type Props = {
     isEditing: boolean;
-    setIsEditing: (val: boolean) => void;
+    setIsEditing: (value: boolean) => void;
 };
 
 export default function ProfileHeader({ isEditing, setIsEditing }: Props) {
-    const name = "John Doe";
-    const initials = name
+    const { data: profileUser } = useProfile();
+    const { data: userBookings = [] } = useMyBookings();
+    const { data: allRides = [] } = useAllRides();
+
+    if (!profileUser) return null;
+
+    const userId = profileUser._id || profileUser.id;
+
+    const initials = profileUser.username
         .split(" ")
-        .map((s) => s[0])
+        .map((part) => part[0])
         .join("")
         .slice(0, 2)
         .toUpperCase();
+
+    const ridesCreatedByUser = allRides.filter((ride) => {
+        const driverId =
+            typeof ride.driver === "string" ? ride.driver : ride.driver._id;
+        return String(driverId) === String(userId);
+    });
+
+    let totalEcoSaved = 0;
+    for (const ride of allRides) {
+        const driverId =
+            typeof ride.driver === "string" ? ride.driver : ride.driver._id;
+
+        if (String(driverId) === String(userId)) {
+            totalEcoSaved += ride.ecoImpact?.totalKg || 0;
+        } else if (
+            ride.passengers?.some(
+                (passenger: any) =>
+                    String(passenger._id ?? passenger) === String(userId)
+            )
+        ) {
+            totalEcoSaved += ride.ecoImpact?.perPersonKg || 0;
+        }
+    }
+
+    const totalRides = userBookings.length + ridesCreatedByUser.length;
 
     return (
         <Card>
@@ -152,26 +187,34 @@ export default function ProfileHeader({ isEditing, setIsEditing }: Props) {
                 </AvatarWrapper>
 
                 <InfoSection>
-                    <Name>{name}</Name>
+                    <Name>{profileUser.username}</Name>
                     <StatsRow>
                         <StatBox>
-                            <StatValue color="#eacc43">24</StatValue>
+                            <StatValue color="#eacc43">{totalRides}</StatValue>
                             <StatLabel>Total Rides</StatLabel>
                         </StatBox>
                         <StatBox>
-                            <StatValue color="#6cc3b7">156kg</StatValue>
+                            <StatValue color="#6cc3b7">
+                                {totalEcoSaved.toFixed(1)}kg
+                            </StatValue>
                             <StatLabel>CO₂ Saved</StatLabel>
                         </StatBox>
                     </StatsRow>
                     <Badges>
-                        <Badge bg="#dcfce7">
+                        <Badge $bg="#e0e7ff">
+                            <UserIcon />
+                            Passenger
+                        </Badge>
+                        <Badge $bg="#dcfce7">
                             <Sprout />
                             Eco Warrior
                         </Badge>
-                        <Badge bg="#fee2e2">
-                            <Car />
-                            Driver
-                        </Badge>
+                        {ridesCreatedByUser.length > 0 && (
+                            <Badge $bg="#fee2e2">
+                                <Car />
+                                Driver
+                            </Badge>
+                        )}
                     </Badges>
                 </InfoSection>
             </LeftSection>

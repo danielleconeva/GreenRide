@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { User, Settings, Car, Clock, Star } from "lucide-react";
+import { User, Settings, Car, Clock } from "lucide-react";
 
 import ProfileHeader from "../components/profile/ProfileHeader";
 import PersonalInfo from "../components/profile/PersonalInfo";

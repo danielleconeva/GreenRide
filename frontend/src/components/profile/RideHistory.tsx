@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Calendar, MapPin, Users, Star } from "lucide-react";
+import { Calendar, MapPin, Users } from "lucide-react";
 
 const Card = styled.section`
     background: #fff;
@@ -33,12 +33,13 @@ const RideItem = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     margin: 0.5rem;
+    padding-bottom: 1.5rem;
 `;
 
 const RideInfo = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     font-size: 0.9rem;
     font-weight: 500;
     color: #50535a;
@@ -47,10 +48,22 @@ const RideInfo = styled.div`
 const Row = styled.div`
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 7px;
+
+    .active {
+        margin: 0.6rem 0;
+        color: #626d82;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
     .map {
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.4rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 `;
 
@@ -58,32 +71,26 @@ const RoleBadge = styled.span<{ type: "driver" | "passenger" }>`
     background: ${({ type }) => (type === "driver" ? "#fee2e2" : "#e0f2fe")};
     color: ${({ type }) => (type === "driver" ? "#991b1b" : "#0369a1")};
     font-weight: 600;
-    font-size: 0.75rem;
-    padding: 0.2rem 0.7rem;
-    border-radius: 10px;
+    font-size: 0.9rem;
+    padding: 0.3rem 0.8rem;
+    border-radius: 12px;
+    margin-right: 0.75rem;
 `;
 
 const RideActions = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 10px;
+    gap: 12px;
     font-size: 0.9rem;
 `;
 
 const Price = styled.span<{ positive?: boolean }>`
-    font-weight: 600;
+    font-weight: 500;
     color: ${({ positive, theme }) =>
         positive ? theme.colors.primary : "#374151"};
-    font-size: 1rem;
-`;
-
-const Rating = styled.div`
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: #f59e0b;
-    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 4rem 0 0.5rem 0;
 `;
 
 export default function RideHistory() {
@@ -91,77 +98,75 @@ export default function RideHistory() {
         <Card>
             <Title>Recent Rides</Title>
             <RideList>
-                {/* Passenger Example */}
                 <RideItem>
                     <RideInfo>
                         <Row>
-                            <RoleBadge type="passenger">Passenger</RoleBadge>
-                            <Calendar size={16} />
-                            <span>2024-03-20</span>
+                            <div className="active">
+                                <RoleBadge type="passenger">
+                                    Passenger
+                                </RoleBadge>
+                                <Calendar size={18} />
+                                <span>2024-03-20</span>
+                            </div>
                         </Row>
                         <Row className="map">
-                            <MapPin size={16} color="#36a79a" />
+                            <MapPin size={20} color="#36a79a" />
                             <span>Downtown → Airport</span>
                         </Row>
                         <Row>
-                            <Users size={16} />
+                            <Users size={18} />
                             <span>Driver: Sarah Johnson</span>
                         </Row>
                     </RideInfo>
                     <RideActions>
-                        <Rating>
-                            <Star size={16} /> 5
-                        </Rating>
                         <Price>$25</Price>
                     </RideActions>
                 </RideItem>
 
-                {/* Driver Example */}
                 <RideItem>
                     <RideInfo>
                         <Row>
-                            <RoleBadge type="driver">Driver</RoleBadge>
-                            <Calendar size={16} />
-                            <span>2024-03-18</span>
+                            <div className="active">
+                                <RoleBadge type="driver">Driver</RoleBadge>
+                                <Calendar size={18} />
+                                <span>2024-03-18</span>
+                            </div>
                         </Row>
                         <Row className="map">
-                            <MapPin size={16} color="#36a79a" />
+                            <MapPin size={20} color="#36a79a" />
                             <span>University → Mall</span>
                         </Row>
                         <Row>
-                            <Users size={16} />
+                            <Users size={18} />
                             <span>Passengers: Mike Chen, Emma Wilson</span>
                         </Row>
                     </RideInfo>
                     <RideActions>
-                        <Rating>
-                            <Star size={16} /> 4.8
-                        </Rating>
                         <Price positive>+$45</Price>
                     </RideActions>
                 </RideItem>
 
-                {/* Another Passenger Example */}
                 <RideItem>
                     <RideInfo>
                         <Row>
-                            <RoleBadge type="passenger">Passenger</RoleBadge>
-                            <Calendar size={16} />
-                            <span>2024-03-15</span>
+                            <div className="active">
+                                <RoleBadge type="passenger">
+                                    Passenger
+                                </RoleBadge>
+                                <Calendar size={18} />
+                                <span>2024-03-15</span>
+                            </div>
                         </Row>
                         <Row className="map">
-                            <MapPin size={16} color="#36a79a" />
+                            <MapPin size={20} color="#36a79a" />
                             <span>Office District → Home</span>
                         </Row>
                         <Row>
-                            <Users size={16} />
+                            <Users size={18} />
                             <span>Driver: David Kim</span>
                         </Row>
                     </RideInfo>
                     <RideActions>
-                        <Rating>
-                            <Star size={16} /> 4.5
-                        </Rating>
                         <Price>$18</Price>
                     </RideActions>
                 </RideItem>
