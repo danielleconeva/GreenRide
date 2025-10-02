@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ProfileUser } from "./useProfile";
 
-type UpdateProfileInput = Partial<Pick<
-    ProfileUser,
-    "username" | "email" | "phoneNumber" | "bio"
->>;
+type UpdateProfileInput = Partial<
+    Pick<ProfileUser, "username" | "email" | "phoneNumber" | "bio" | "car">
+>;
 
 async function updateProfile(data: UpdateProfileInput): Promise<ProfileUser> {
     const res = await fetch(`http://localhost:3000/api/users/profile`, {

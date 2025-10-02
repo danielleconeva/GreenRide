@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
             { path: "search", element: <SearchPage /> },
             { path: "rides", element: <RidesPage /> },
             { path: "rides/:id", element: <RideDetailsPage /> },
-            { path: "rides/:id/edit", element: <RideEditPage /> },
+            { path: "rides/:rideId/edit", element: <RideEditPage /> },
             { path: "booking/:rideId", element: <BookingDetailsPage /> },
             {
                 path: "booking-confirmed/:rideId",

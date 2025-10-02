@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useProfile } from "../../hooks/useProfile";
+import { useUpdateProfile } from "../../hooks/useUpdateProfile";
 
 const Card = styled.section`
     background: #fff;
@@ -55,6 +57,17 @@ type Props = {
 };
 
 export default function CarDetails({ isEditing }: Props) {
+    const { data: profileUser } = useProfile();
+    const updateProfile = useUpdateProfile();
+
+    if (!profileUser) return null;
+
+    function handleChange(field: string, value: string) {
+        if (!isEditing) return;
+        const newCar = { ...profileUser!.car, [field]: value };
+        updateProfile.mutate({ car: newCar });
+    }
+
     return (
         <Card>
             <Title>Vehicle Information</Title>
@@ -63,40 +76,52 @@ export default function CarDetails({ isEditing }: Props) {
                     <Label>Make</Label>
                     <Input
                         type="text"
-                        defaultValue="Toyota"
+                        value={profileUser.car?.make || ""}
+                        placeholder="e.g. Toyota"
                         disabled={!isEditing}
+                        onChange={(e) => handleChange("make", e.target.value)}
                     />
                 </Group>
                 <Group>
                     <Label>Model</Label>
                     <Input
                         type="text"
-                        defaultValue="Prius"
+                        value={profileUser.car?.model || ""}
+                        placeholder="e.g. Prius"
                         disabled={!isEditing}
+                        onChange={(e) => handleChange("model", e.target.value)}
                     />
                 </Group>
                 <Group>
                     <Label>Year</Label>
                     <Input
                         type="text"
-                        defaultValue="2022"
+                        value={profileUser.car?.year || ""}
+                        placeholder="e.g. 2022"
                         disabled={!isEditing}
+                        onChange={(e) => handleChange("year", e.target.value)}
                     />
                 </Group>
                 <Group>
                     <Label>Color</Label>
                     <Input
                         type="text"
-                        defaultValue="Silver"
+                        value={profileUser.car?.color || ""}
+                        placeholder="e.g. Silver"
                         disabled={!isEditing}
+                        onChange={(e) => handleChange("color", e.target.value)}
                     />
                 </Group>
                 <Group>
                     <Label>License Plate</Label>
                     <Input
                         type="text"
-                        defaultValue="ECO 123"
+                        value={profileUser.car?.licensePlate || ""}
+                        placeholder="e.g. ECO 123"
                         disabled={!isEditing}
+                        onChange={(e) =>
+                            handleChange("licensePlate", e.target.value)
+                        }
                     />
                 </Group>
             </Form>

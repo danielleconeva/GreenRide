@@ -4,13 +4,6 @@ import { CityInput } from "./CityInput";
 import { MapPin, Cigarette, Snowflake, Dog, Music } from "lucide-react";
 import type { NewRide, Ride } from "../types/ride";
 
-type PublishFormProps = {
-    onSubmit: (values: NewRide) => void;
-    submitting?: boolean;
-    serverError?: string;
-    createdRide?: Ride | null;
-};
-
 const Form = styled.form`
     max-width: 980px;
     margin: 2rem auto 4rem;
@@ -223,25 +216,45 @@ function minutesBetween(depTime: string, arrTime: string): number {
     return arr - dep;
 }
 
+function formatDate(dateStr?: string) {
+    if (!dateStr) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+    return dateStr.split("T")[0]; // 2025-10-02T00:00:00.000Z -> 2025-10-02
+}
+
+function formatTime(timeStr?: string) {
+    if (!timeStr) return "";
+    if (/^\d{2}:\d{2}$/.test(timeStr)) return timeStr;
+    try {
+        const d = new Date(timeStr);
+        return d.toISOString().substring(11, 16); // HH:mm
+    } catch {
+        return "";
+    }
+}
+type PublishFormProps = {
+    onSubmit: (values: NewRide) => void;
+    submitting?: boolean;
+    serverError?: string;
+    createdRide?: Ride | null;
+    initialValues?: Partial<Ride>; // 👈 NEW
+};
 export default function PublishForm({
     onSubmit,
     submitting,
     serverError,
     createdRide,
+    initialValues = {},
 }: PublishFormProps) {
-    const [from, setFrom] = useState("");
-    const [to, setTo] = useState("");
+    const [from, setFrom] = useState(initialValues.from || "");
+    const [to, setTo] = useState(initialValues.to || "");
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
         const fd = new FormData(e.currentTarget);
 
-        // helpers
-        const getStr = (name: string) => {
-            const v = fd.get(name);
-            return typeof v === "string" ? v : "";
-        };
+        const getStr = (name: string) =>
+            typeof fd.get(name) === "string" ? (fd.get(name) as string) : "";
         const getNum = (name: string, fallback = 0) => {
             const n = Number(getStr(name));
             return Number.isFinite(n) ? n : fallback;
@@ -315,7 +328,9 @@ export default function PublishForm({
                             id="departureDate"
                             name="departureDate"
                             type="date"
-                            placeholder="Pick a date"
+                            defaultValue={formatDate(
+                                initialValues.departureDate
+                            )}
                         />
                     </Group>
 
@@ -325,6 +340,9 @@ export default function PublishForm({
                             id="departureTime"
                             name="departureTime"
                             type="time"
+                            defaultValue={formatTime(
+                                initialValues.departureTime
+                            )}
                         />
                     </Group>
 
@@ -334,6 +352,7 @@ export default function PublishForm({
                             id="arrivalTime"
                             name="arrivalTime"
                             type="time"
+                            defaultValue={formatTime(initialValues.arrivalTime)}
                         />
                     </Group>
                 </FlexRow>
@@ -344,13 +363,15 @@ export default function PublishForm({
                         <Select
                             id="seatsAvailable"
                             name="seatsAvailable"
-                            defaultValue="1"
+                            defaultValue={String(
+                                initialValues.seatsAvailable || 1
+                            )}
                         >
-                            <option value="1"> 1 seat</option>
-                            <option value="2"> 2 seats</option>
-                            <option value="3"> 3 seats</option>
-                            <option value="4"> 4 seats</option>
-                            <option value="5"> 5 seats</option>
+                            {[1, 2, 3, 4, 5].map((n) => (
+                                <option key={n} value={n}>
+                                    {n} seat{n > 1 ? "s" : ""}
+                                </option>
+                            ))}
                         </Select>
                     </Group>
 
@@ -361,6 +382,8 @@ export default function PublishForm({
                             name="pricePerSeat"
                             type="number"
                             placeholder="Enter price per seat"
+                            defaultValue={initialValues.pricePerSeat}
+                            onWheel={(e) => e.currentTarget.blur()}
                         />
                     </Group>
                 </FlexRow>
@@ -368,12 +391,14 @@ export default function PublishForm({
 
             <FieldsetCard>
                 <Legend>Amenities & Preferences</Legend>
-
                 <AmenityGrid>
                     <AmenityItem>
                         <AmenityCheckbox
                             id="amenities.smokingAllowed"
                             name="amenities.smokingAllowed"
+                            defaultChecked={
+                                initialValues.amenities?.smokingAllowed
+                            }
                         />
                         <AmenityIconWrapper>
                             <Cigarette size={16} />
@@ -385,6 +410,9 @@ export default function PublishForm({
                         <AmenityCheckbox
                             id="amenities.airConditioning"
                             name="amenities.airConditioning"
+                            defaultChecked={
+                                initialValues.amenities?.airConditioning
+                            }
                         />
                         <AmenityIconWrapper>
                             <Snowflake size={16} />
@@ -396,6 +424,9 @@ export default function PublishForm({
                         <AmenityCheckbox
                             id="amenities.petsAllowed"
                             name="amenities.petsAllowed"
+                            defaultChecked={
+                                initialValues.amenities?.petsAllowed
+                            }
                         />
                         <AmenityIconWrapper>
                             <Dog size={16} />
@@ -407,6 +438,7 @@ export default function PublishForm({
                         <AmenityCheckbox
                             id="amenities.music"
                             name="amenities.music"
+                            defaultChecked={initialValues.amenities?.music}
                         />
                         <AmenityIconWrapper>
                             <Music size={16} />
@@ -420,13 +452,18 @@ export default function PublishForm({
                     <Textarea
                         id="notes"
                         name="notes"
-                        placeholder="e.g., Meeting point in front of metro station, happy to help with luggage..."
+                        placeholder="e.g., Meeting point at metro station..."
+                        defaultValue={initialValues.notes}
                     />
                 </Group>
             </FieldsetCard>
 
             <Submit type="submit" disabled={submitting}>
-                {submitting ? "Publishing…" : "+ Publish a Ride"}
+                {submitting
+                    ? "Saving…"
+                    : initialValues._id
+                    ? "Save Changes"
+                    : "+ Publish a Ride"}
             </Submit>
 
             {serverError && (

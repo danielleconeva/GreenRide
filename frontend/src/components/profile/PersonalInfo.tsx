@@ -122,6 +122,7 @@ export default function PersonalInfo({ isEditing }: Props) {
                     <Input
                         type="text"
                         value={formData.username}
+                        placeholder="e.g. John Doe"
                         disabled={!isEditing}
                         onChange={(e) =>
                             handleChange("username", e.target.value)
@@ -133,6 +134,7 @@ export default function PersonalInfo({ isEditing }: Props) {
                     <Input
                         type="email"
                         value={formData.email}
+                        placeholder="e.g. john.doe@email.com"
                         disabled={!isEditing}
                         onChange={(e) => handleChange("email", e.target.value)}
                     />
@@ -142,6 +144,7 @@ export default function PersonalInfo({ isEditing }: Props) {
                     <Input
                         type="tel"
                         value={formData.phoneNumber}
+                        placeholder="e.g. +1 555 123 4567"
                         disabled={!isEditing}
                         onChange={(e) =>
                             handleChange("phoneNumber", e.target.value)
@@ -153,6 +156,7 @@ export default function PersonalInfo({ isEditing }: Props) {
                     <Textarea
                         rows={3}
                         value={formData.bio}
+                        placeholder="e.g. Eco-conscious traveler who loves meeting new people"
                         disabled={!isEditing}
                         onChange={(e) => handleChange("bio", e.target.value)}
                     />
