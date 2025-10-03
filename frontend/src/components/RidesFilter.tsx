@@ -1,6 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ChevronDown, Filter } from "lucide-react";
+import type { Ride } from "../types/ride";
+import type { ActiveFilters } from "../pages/RidesPage";
 
 const Wrap = styled.aside`
     position: sticky;
@@ -143,33 +145,79 @@ const Check = styled.label`
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #4b5563;
-    font-size: 0.95rem;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 400;
     cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: #438284;
+    }
 
     input {
-        width: 16px;
-        height: 16px;
-        border-radius: 4px;
-        border: 1px solid #d1d5db;
-        accent-color: #14b8a6;
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        border: 1.5px solid #e2e8f0;
+        accent-color: #1f978d;
         cursor: pointer;
+        transition: all 0.2s ease;
 
-        &:focus {
-            outline: 2px solid #14b8a6;
-            outline-offset: 2px;
+        &:hover {
+            border-color: #cbd5e1;
+        }
+
+        &:focus-visible {
+            outline: none;
+            border-color: #198c82;
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        &:checked {
+            border-color: #1d988e;
         }
     }
 `;
+type ResultsFilterProps = {
+    data?: Ride[];
+    activeFilters: ActiveFilters;
+    setActiveFilters: React.Dispatch<React.SetStateAction<ActiveFilters>>;
+    maxPrice: number | null;
+    setMaxPrice: React.Dispatch<React.SetStateAction<number | null>>;
+    sortBy: "departure" | "priceAsc" | "priceDesc" | "seatsDesc";
+    setSortBy: React.Dispatch<
+        React.SetStateAction<
+            "departure" | "priceAsc" | "priceDesc" | "seatsDesc"
+        >
+    >;
+};
 
-export default function ResultsFilter() {
+export default function ResultsFilter({
+    data = [],
+    activeFilters,
+    setActiveFilters,
+    maxPrice,
+    setMaxPrice,
+    sortBy,
+    setSortBy,
+}: ResultsFilterProps) {
     const MIN = 0;
-    const MAX = 200;
-    const [maxPrice, setMaxPrice] = useState(100);
+    const MAX =
+        data.length > 0
+            ? Math.max(...data.map((ride) => ride.pricePerSeat))
+            : 0;
+
+    // sync when new rides arrive
+    useEffect(() => {
+        if (MAX > 0 && (!maxPrice || maxPrice > MAX)) {
+            setMaxPrice(MAX);
+        }
+    }, [MAX, maxPrice, setMaxPrice]);
 
     const percent = useMemo(
-        () => ((maxPrice - MIN) / (MAX - MIN)) * 100,
-        [maxPrice]
+        () => ((Number(maxPrice) - MIN) / (MAX - MIN || 1)) * 100,
+        [maxPrice, MAX]
     );
 
     const trackBg = useMemo(
@@ -186,10 +234,22 @@ export default function ResultsFilter() {
                     Filters
                 </Title>
 
+                {/* Sort */}
                 <Group>
                     <Label>Sort by</Label>
                     <SelectWrap>
-                        <Select defaultValue="departure">
+                        <Select
+                            value={sortBy}
+                            onChange={(e) =>
+                                setSortBy(
+                                    e.target.value as
+                                        | "departure"
+                                        | "priceAsc"
+                                        | "priceDesc"
+                                        | "seatsDesc"
+                                )
+                            }
+                        >
                             <option value="departure">Departure Time</option>
                             <option value="priceAsc">Price (low → high)</option>
                             <option value="priceDesc">
@@ -201,20 +261,16 @@ export default function ResultsFilter() {
                     </SelectWrap>
                 </Group>
 
+                {/* Price */}
                 <Group>
-                    <Label>Price Range (Up to €{maxPrice})</Label>
+                    <Label>Price Range (Up to €{maxPrice ?? 0})</Label>
                     <RangeContainer>
                         <Range
                             min={MIN}
                             max={MAX}
-                            value={maxPrice}
+                            value={maxPrice ?? MAX}
                             onChange={(e) =>
                                 setMaxPrice(Number(e.target.value))
-                            }
-                            onInput={(e) =>
-                                setMaxPrice(
-                                    Number((e.target as HTMLInputElement).value)
-                                )
                             }
                             style={{ background: trackBg }}
                             aria-label="Max price"
@@ -226,23 +282,60 @@ export default function ResultsFilter() {
                     </RangeContainer>
                 </Group>
 
+                {/* Amenities */}
                 <Group>
                     <Label>Amenities</Label>
                     <CheckboxGroup>
                         <Check>
-                            <input type="checkbox" />
+                            <input
+                                type="checkbox"
+                                checked={activeFilters.airConditioning}
+                                onChange={() =>
+                                    setActiveFilters((prev) => ({
+                                        ...prev,
+                                        airConditioning: !prev.airConditioning,
+                                    }))
+                                }
+                            />
                             Air Conditioning
                         </Check>
                         <Check>
-                            <input type="checkbox" />
-                            Music Allowed
+                            <input
+                                type="checkbox"
+                                checked={activeFilters.music}
+                                onChange={() =>
+                                    setActiveFilters((prev) => ({
+                                        ...prev,
+                                        music: !prev.music,
+                                    }))
+                                }
+                            />
+                            Music
                         </Check>
                         <Check>
-                            <input type="checkbox" />
-                            Non-Smoking
+                            <input
+                                type="checkbox"
+                                checked={activeFilters.smokingAllowed}
+                                onChange={() =>
+                                    setActiveFilters((prev) => ({
+                                        ...prev,
+                                        smokingAllowed: !prev.smokingAllowed,
+                                    }))
+                                }
+                            />
+                            Smoking Allowed
                         </Check>
                         <Check>
-                            <input type="checkbox" />
+                            <input
+                                type="checkbox"
+                                checked={activeFilters.petsAllowed}
+                                onChange={() =>
+                                    setActiveFilters((prev) => ({
+                                        ...prev,
+                                        petsAllowed: !prev.petsAllowed,
+                                    }))
+                                }
+                            />
                             Pets Allowed
                         </Check>
                     </CheckboxGroup>

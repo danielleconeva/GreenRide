@@ -4,6 +4,7 @@ import useRides from "../hooks/useRides";
 import type { Ride, RideSearchParams } from "../types/ride";
 import RidesFilter from "../components/RidesFilter";
 import RideCard from "../components/RideCard";
+import { useMemo, useState } from "react";
 
 const Page = styled.div`
     font-family: ${({ theme }) => theme.fonts.body};
@@ -75,6 +76,13 @@ const Skeleton = styled.div`
     }
 `;
 
+export type ActiveFilters = {
+    airConditioning: boolean;
+    music: boolean;
+    smokingAllowed: boolean;
+    petsAllowed: boolean;
+};
+
 export default function RidesPage() {
     const [searchParams] = useSearchParams();
 
@@ -94,6 +102,57 @@ export default function RidesPage() {
         Number(params.passengers) > 1 ? "passengers" : "passenger"
     }`;
 
+    const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
+        airConditioning: false,
+        music: false,
+        smokingAllowed: false,
+        petsAllowed: false,
+    });
+
+    const [maxPrice, setMaxPrice] = useState<number | null>(null);
+    const [sortBy, setSortBy] = useState<
+        "departure" | "priceAsc" | "priceDesc" | "seatsDesc"
+    >("departure");
+
+    const filteredRides = useMemo(() => {
+        if (!data) return [];
+
+        return data
+            .filter((ride) => {
+                // ✅ Price filter
+                if (maxPrice && ride.pricePerSeat > maxPrice) return false;
+
+                // ✅ Amenities filter
+                if (
+                    activeFilters.airConditioning &&
+                    !ride.amenities.airConditioning
+                )
+                    return false;
+                if (activeFilters.music && !ride.amenities.music) return false;
+                if (
+                    activeFilters.smokingAllowed &&
+                    !ride.amenities.smokingAllowed
+                )
+                    return false;
+                if (activeFilters.petsAllowed && !ride.amenities.petsAllowed)
+                    return false;
+
+                return true;
+            })
+            .sort((a, b) => {
+                switch (sortBy) {
+                    case "priceAsc":
+                        return a.pricePerSeat - b.pricePerSeat;
+                    case "priceDesc":
+                        return b.pricePerSeat - a.pricePerSeat;
+                    case "seatsDesc":
+                        return b.seatsAvailable - a.seatsAvailable;
+                    default:
+                        return 0; // departure time sorting if you want
+                }
+            });
+    }, [data, activeFilters, maxPrice, sortBy]);
+
     return (
         <Page>
             <Header>
@@ -104,7 +163,17 @@ export default function RidesPage() {
             </Header>
 
             <Layout>
-                <RidesFilter />
+                {!isLoading && (
+                    <RidesFilter
+                        data={data}
+                        activeFilters={activeFilters}
+                        setActiveFilters={setActiveFilters}
+                        maxPrice={maxPrice}
+                        setMaxPrice={setMaxPrice}
+                        sortBy={sortBy}
+                        setSortBy={setSortBy}
+                    />
+                )}
 
                 <div>
                     <div style={{ color: "#6b7280", marginBottom: 20 }}>
@@ -132,9 +201,9 @@ export default function RidesPage() {
                         </Empty>
                     )}
 
-                    {!isLoading && !error && data && data.length > 0 && (
+                    {!isLoading && !error && filteredRides.length > 0 && (
                         <List>
-                            {data.map((ride: Ride) => (
+                            {filteredRides.map((ride: Ride) => (
                                 <RideCard key={ride._id} ride={ride} />
                             ))}
                         </List>

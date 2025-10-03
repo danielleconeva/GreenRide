@@ -7,7 +7,6 @@ import PublishPage from "../pages/PublishPage";
 import LoginPage from "../pages/LoginPage";
 import SignUpPage from "../pages/SignUpPage";
 import RidesPage from "../pages/RidesPage";
-import RideDetailsPage from "../pages/RideDetailsPage";
 import RideEditPage from "../pages/RideEditPage";
 import BookingDetailsPage from "../pages/BookingDetailsPage";
 import BookingConfirmedPage from "../pages/BookingConfirmedPage";
@@ -23,7 +22,6 @@ export const router = createBrowserRouter([
             { index: true, element: <HomePage /> },
             { path: "search", element: <SearchPage /> },
             { path: "rides", element: <RidesPage /> },
-            { path: "rides/:id", element: <RideDetailsPage /> },
             { path: "rides/:rideId/edit", element: <RideEditPage /> },
             { path: "booking/:rideId", element: <BookingDetailsPage /> },
             {
