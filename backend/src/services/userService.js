@@ -1,7 +1,7 @@
-// services/userService.js
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import { generateAuthToken } from "../utils/userUtils.js";
+import { computeAchievements } from "../utils/computeAchievements.js";
 
 export default {
     async register(userData) {
@@ -102,4 +102,17 @@ export default {
             "username email role ecoStats rating phoneNumber bio car tripsCompleted achievements createdAt updatedAt"
         );
     },
+    async getEcoStats(userId) {
+        const user = await User.findById(userId).select("ecoStats achievements createdAt");
+
+        if (!user) throw new Error("User not found.");
+
+        const achievements = computeAchievements(user);
+
+        return {
+            ecoStats: user.ecoStats,
+            achievements,
+        };
+    }
+
 };

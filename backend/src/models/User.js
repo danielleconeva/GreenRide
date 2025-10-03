@@ -39,7 +39,6 @@ const userSchema = new Schema({
     },
 
     car: {
-
         make: { type: String, trim: true },
         model: { type: String, trim: true },
         year: { type: String, trim: true },
@@ -53,15 +52,16 @@ const userSchema = new Schema({
         moneySaved: { type: Number, default: 0 }
     },
 
-    rating: { type: Number, default: 0, min: 0, max: 5 },
-    tripsCompleted: { type: Number, default: 0 },
     achievements: [
         {
-            name: { type: String },
+            name: { type: String, required: true },
             description: { type: String },
-            unlockedAt: { type: Date }
+            unlockedAt: { type: Date, default: Date.now }
         }
-    ]
+    ],
+
+    rating: { type: Number, default: 0, min: 0, max: 5 },
+    tripsCompleted: { type: Number, default: 0 }
 }, { timestamps: true });
 
 

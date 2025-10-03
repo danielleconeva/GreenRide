@@ -41,14 +41,13 @@ userController.put("/profile", isAuth, async (req, res) => {
 
 userController.get("/profile/eco", isAuth, async (req, res) => {
     try {
-        const ecoStats = await userService.getEcoStats(req.user.id);
-        res.status(200).json({ ecoStats });
+        const { ecoStats, achievements } = await userService.getEcoStats(req.user.id);
+        res.status(200).json({ ecoStats, achievements });
     } catch (err) {
+        console.error("GET /profile/eco error:", err);
         res.status(400).json({ error: "Failed to load eco stats." });
     }
 });
-
-
 
 userController.get("/:userId/public", async (req, res) => {
     try {
