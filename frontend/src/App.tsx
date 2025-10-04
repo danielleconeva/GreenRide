@@ -6,6 +6,7 @@ import type { AppDispatch } from "./store/store.ts";
 import { checkAuth } from "./store/authSlice.ts";
 import { useEffect } from "react";
 import Notification from "./components/Notification.tsx";
+import GlobalLoader from "./components/GlobalLoader.tsx";
 
 export default function App() {
     const dispatch = useDispatch<AppDispatch>();
@@ -18,6 +19,7 @@ export default function App() {
         <>
             <RouterProvider router={router} />
             <Notification />
+            <GlobalLoader />
         </>
     );
 }

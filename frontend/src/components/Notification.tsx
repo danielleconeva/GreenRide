@@ -16,7 +16,7 @@ const fadeOut = keyframes`
 
 const Popup = styled.div<{ $type: "success" | "error"; $closing: boolean }>`
     position: fixed;
-    top: 1.5rem;
+    top: 6rem;
     right: 1.5rem;
     background: #fff;
     color: ${({ theme, $type }) =>

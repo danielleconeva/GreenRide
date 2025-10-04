@@ -153,7 +153,7 @@ export default function LoginPage() {
                 dispatch(
                     showNotification({
                         type: "success",
-                        message: "Welcome back! 👋",
+                        message: "Logged in successfully!",
                     })
                 );
                 navigate("/");
