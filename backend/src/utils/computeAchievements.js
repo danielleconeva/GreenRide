@@ -6,7 +6,7 @@ export function computeAchievements(user) {
     const thresholds = [
         {
             name: "Eco Starter",
-            description: "Completed your first ride",
+            description: "Booked your first ride",
             key: "totalRides",
             target: 1,
         },
