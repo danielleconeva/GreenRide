@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { useProfile } from "../../hooks/useProfile";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
+import type { AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../../store/notificationsSlice";
 
 const Card = styled.section`
     background: #fff;
@@ -58,6 +61,8 @@ type Props = {
 
 export default function CarDetails({ isEditing }: Props) {
     const { data: profileUser } = useProfile();
+    const dispatch = useDispatch<AppDispatch>();
+
     const updateProfile = useUpdateProfile();
 
     if (!profileUser) return null;
@@ -65,7 +70,29 @@ export default function CarDetails({ isEditing }: Props) {
     function handleChange(field: string, value: string) {
         if (!isEditing) return;
         const newCar = { ...profileUser!.car, [field]: value };
-        updateProfile.mutate({ car: newCar });
+
+        updateProfile.mutate(
+            { car: newCar },
+            {
+                onSuccess: () => {
+                    dispatch(
+                        showNotification({
+                            type: "success",
+                            message: "Car details updated successfully",
+                        })
+                    );
+                },
+                onError: (err: any) => {
+                    dispatch(
+                        showNotification({
+                            type: "error",
+                            message:
+                                err?.message || "Failed to update car details",
+                        })
+                    );
+                },
+            }
+        );
     }
 
     return (

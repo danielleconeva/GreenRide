@@ -3,6 +3,9 @@ import styled, { keyframes } from "styled-components";
 import PublishForm from "../components/PublishForm";
 import useRide from "../hooks/useRide";
 import type { Ride } from "../types/ride";
+import { showNotification } from "../store/notificationsSlice";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../store/store";
 
 const fadeInUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -59,10 +62,11 @@ const FormWrapper = styled.div`
     animation: ${fadeScale} 0.6s ease forwards;
     animation-delay: 0.35s;
 `;
-
 export default function RideEditPage() {
     const { rideId } = useParams<{ rideId: string }>();
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+
     const {
         data: ride,
         isLoading,
@@ -77,7 +81,21 @@ export default function RideEditPage() {
             { id: rideId, data: values },
             {
                 onSuccess: () => {
+                    dispatch(
+                        showNotification({
+                            type: "success",
+                            message: "Ride updated successfully",
+                        })
+                    );
                     navigate("/");
+                },
+                onError: (err: any) => {
+                    dispatch(
+                        showNotification({
+                            type: "error",
+                            message: err?.message || "Failed to update ride",
+                        })
+                    );
                 },
             }
         );

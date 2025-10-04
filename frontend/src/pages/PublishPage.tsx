@@ -3,9 +3,10 @@ import PublishForm from "../components/PublishForm";
 import useCreateRide from "../hooks/useCreateRide";
 import type { NewRide } from "../types/ride";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { type AppDispatch, type RootState } from "../store/store";
 import PublishFallback from "../components/PublishFallback";
+import { showNotification } from "../store/notificationsSlice";
 
 const fadeUp = keyframes`
   from {
@@ -85,6 +86,7 @@ export default function PublishPage() {
     const user = useSelector((state: RootState) => state.auth.user);
     const navigate = useNavigate();
     const { mutate, isPending, isSuccess, error, data } = useCreateRide();
+    const dispatch = useDispatch<AppDispatch>();
 
     if (!user) {
         return <PublishFallback />;
@@ -92,7 +94,21 @@ export default function PublishPage() {
     function handleSubmit(values: NewRide) {
         mutate(values, {
             onSuccess: () => {
-                navigate("/");
+                dispatch(
+                    showNotification({
+                        type: "success",
+                        message: "Ride published successfully!",
+                    })
+                ),
+                    navigate("/");
+            },
+            onError: (err: any) => {
+                dispatch(
+                    showNotification({
+                        type: "error",
+                        message: err.message || "Failed to publish ride",
+                    })
+                );
             },
         });
     }

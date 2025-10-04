@@ -248,8 +248,6 @@ type PublishFormProps = {
 export default function PublishForm({
     onSubmit,
     submitting,
-    serverError,
-    createdRide,
     initialValues = {},
 }: PublishFormProps) {
     const [from, setFrom] = useState(initialValues.from || "");
@@ -498,18 +496,6 @@ export default function PublishForm({
                     ? "Save Changes"
                     : "+ Publish a Ride"}
             </Submit>
-
-            {serverError && (
-                <p
-                    style={{
-                        color: "crimson",
-                        marginTop: ".75rem",
-                        textAlign: "center",
-                    }}
-                >
-                    {serverError}
-                </p>
-            )}
         </Form>
     );
 }

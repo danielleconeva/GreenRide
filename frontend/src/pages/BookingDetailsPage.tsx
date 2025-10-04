@@ -12,8 +12,9 @@ import PriceSummary from "../components/booking/PriceSummary";
 import EcoBadge from "../components/booking/EcoBadge";
 import useRide from "../hooks/useRide";
 import useCreateBooking from "../hooks/useCreateBooking";
-import { useSelector } from "react-redux";
-import type { RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../store/store";
+import { showNotification } from "../store/notificationsSlice";
 
 const fadeSlideUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -198,6 +199,7 @@ const GhostBtn = styled.button`
 
 export default function BookingDetailsPage() {
     const user = useSelector((state: RootState) => state.auth.user);
+    const dispatch = useDispatch<AppDispatch>();
 
     const { rideId } = useParams();
     const navigate = useNavigate();
@@ -208,7 +210,7 @@ export default function BookingDetailsPage() {
         note: "",
     });
 
-    const { createBooking, isCreating, error } = useCreateBooking();
+    const { createBooking, isCreating } = useCreateBooking();
 
     const maxPassengers = useMemo(() => {
         if (!ride) return 1;
@@ -268,7 +270,14 @@ export default function BookingDetailsPage() {
                 },
                 replace: true,
             });
-        } catch {}
+        } catch (err: any) {
+            dispatch(
+                showNotification({
+                    type: "error",
+                    message: err?.message || "Booking failed. Please try again",
+                })
+            );
+        }
     };
 
     return (
@@ -291,14 +300,6 @@ export default function BookingDetailsPage() {
                         maxPassengers={maxPassengers}
                         onChange={setForm}
                     />
-                    {error && (
-                        <div
-                            role="alert"
-                            style={{ color: "#b91c1c", fontWeight: 600 }}
-                        >
-                            {error.message}
-                        </div>
-                    )}
                 </Column>
 
                 <Aside>

@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useProfile } from "../../hooks/useProfile";
+import { showNotification } from "../../store/notificationsSlice";
+import type { AppDispatch } from "../../store/store";
+import { useDispatch } from "react-redux";
 
 const Card = styled.section`
     background: #fff;
@@ -70,6 +73,7 @@ type Props = {
 
 export default function PersonalInfo({ isEditing }: Props) {
     const { data: profileUser, refetch } = useProfile();
+    const dispatch = useDispatch<AppDispatch>();
 
     const [formData, setFormData] = useState({
         username: "",
@@ -107,12 +111,23 @@ export default function PersonalInfo({ isEditing }: Props) {
                 if (!response.ok) throw new Error("Failed to update profile");
 
                 await refetch();
-            } catch (err) {
-                console.error("Profile update failed:", err);
+
+                dispatch(
+                    showNotification({
+                        type: "success",
+                        message: "Profile updated successfully",
+                    })
+                );
+            } catch (err: any) {
+                dispatch(
+                    showNotification({
+                        type: "error",
+                        message: err?.message || "Profile update failed",
+                    })
+                );
             }
         }
     }
-
     return (
         <Card>
             <Title>Personal Information</Title>

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "./store/store.ts";
 import { checkAuth } from "./store/authSlice.ts";
 import { useEffect } from "react";
+import Notification from "./components/Notification.tsx";
 
 export default function App() {
     const dispatch = useDispatch<AppDispatch>();
@@ -13,5 +14,10 @@ export default function App() {
         dispatch(checkAuth());
     }, [dispatch]);
 
-    return <RouterProvider router={router} />;
+    return (
+        <>
+            <RouterProvider router={router} />
+            <Notification />
+        </>
+    );
 }

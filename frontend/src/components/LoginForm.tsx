@@ -133,7 +133,6 @@ export default function LoginForm({
     password,
     showPassword,
     loading,
-    serverError,
     touched,
     errors,
     onChange,
@@ -194,8 +193,6 @@ export default function LoginForm({
             <button type="submit" disabled={loading}>
                 {loading ? "Logging in..." : "Log In"}
             </button>
-
-            {serverError && <ValidationError>{serverError}</ValidationError>}
 
             <p>
                 Don't have an account?{" "}

@@ -8,6 +8,7 @@ import { register } from "../store/authSlice";
 
 import SignUpForm from "../components/SignUpForm";
 import { useSignUpForm } from "../hooks/useSignUpForm";
+import { showNotification } from "../store/notificationsSlice";
 
 const fadeSlideUp = keyframes`
   from {
@@ -137,9 +138,27 @@ export default function SignUpPage() {
 
     const form = useSignUpForm({
         onValidSubmit: (normalized) =>
-            dispatch(register(normalized)).then(() => {
-                navigate("/");
-            }),
+            dispatch(register(normalized))
+                .unwrap()
+                .then(() => {
+                    dispatch(
+                        showNotification({
+                            type: "success",
+                            message: "Welcome to GreenRide!",
+                        })
+                    );
+                    navigate("/");
+                })
+                .catch((err: any) => {
+                    dispatch(
+                        showNotification({
+                            type: "error",
+                            message:
+                                err?.message ||
+                                "Signup failed. Please try again.",
+                        })
+                    );
+                }),
     });
 
     return (

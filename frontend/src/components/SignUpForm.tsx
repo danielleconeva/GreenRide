@@ -132,7 +132,6 @@ export default function SignUpForm({
     errors,
     touched,
     loading,
-    serverError,
     showPassword,
     showConfirmPassword,
     onChange,
@@ -263,8 +262,6 @@ export default function SignUpForm({
             <button type="submit" disabled={loading}>
                 {loading ? "Signing up..." : "Sign Up"}
             </button>
-
-            {serverError && <ValidationError>{serverError}</ValidationError>}
 
             <p>
                 Already have an account?{" "}

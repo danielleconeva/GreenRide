@@ -8,6 +8,7 @@ import { login } from "../store/authSlice";
 import LoginForm from "../components/LoginForm";
 import { useLoginForm } from "../hooks/useLoginForm";
 import { useNavigate } from "react-router-dom";
+import { showNotification } from "../store/notificationsSlice";
 
 const fadeSlideUp = keyframes`
   from {
@@ -149,8 +150,22 @@ export default function LoginPage() {
         onValidSubmit: async ({ email, password }) => {
             try {
                 await dispatch(login({ email, password })).unwrap();
+                dispatch(
+                    showNotification({
+                        type: "success",
+                        message: "Welcome back! 👋",
+                    })
+                );
                 navigate("/");
-            } catch {}
+            } catch (err: any) {
+                dispatch(
+                    showNotification({
+                        type: "error",
+                        message:
+                            err?.message || "Login failed. Please try again.",
+                    })
+                );
+            }
         },
     });
 
