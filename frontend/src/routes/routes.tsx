@@ -12,6 +12,8 @@ import BookingDetailsPage from "../pages/BookingDetailsPage";
 import BookingConfirmedPage from "../pages/BookingConfirmedPage";
 import EcoImpactPage from "../pages/EcoImpactPage";
 import ProfilePage from "../pages/ProfilePage";
+import ProtectedRoute from "../components/ProtectedRoute";
+import GuestRoute from "../components/GuestRoute";
 
 export const router = createBrowserRouter([
     {
@@ -30,9 +32,30 @@ export const router = createBrowserRouter([
             },
             { path: "publish", element: <PublishPage /> },
             { path: "eco-impact", element: <EcoImpactPage /> },
-            { path: "login", element: <LoginPage /> },
-            { path: "register", element: <SignUpPage /> },
-            { path: "profile", element: <ProfilePage /> },
+            {
+                path: "login",
+                element: (
+                    <GuestRoute>
+                        <LoginPage />
+                    </GuestRoute>
+                ),
+            },
+            {
+                path: "register",
+                element: (
+                    <GuestRoute>
+                        <SignUpPage />
+                    </GuestRoute>
+                ),
+            },
+            {
+                path: "profile",
+                element: (
+                    <ProtectedRoute>
+                        <ProfilePage />
+                    </ProtectedRoute>
+                ),
+            },
         ],
     },
 ]);

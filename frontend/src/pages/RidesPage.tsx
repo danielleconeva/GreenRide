@@ -1,10 +1,20 @@
 import { useSearchParams } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import useRides from "../hooks/useRides";
 import type { Ride, RideSearchParams } from "../types/ride";
 import RidesFilter from "../components/RidesFilter";
 import RideCard from "../components/RideCard";
 import { useMemo, useState } from "react";
+
+const fadeSlideUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const fadeScale = keyframes`
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+`;
 
 const Page = styled.div`
     font-family: ${({ theme }) => theme.fonts.body};
@@ -12,6 +22,9 @@ const Page = styled.div`
     margin: 0.5rem auto;
     padding: 0 16px;
     margin-bottom: 3rem;
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.7s ease forwards;
 `;
 
 const Header = styled.div`
@@ -20,6 +33,10 @@ const Header = styled.div`
     align-items: baseline;
     gap: 12px;
     margin-bottom: 16px;
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.6s ease forwards;
+    animation-delay: 0.2s;
 
     h1 {
         margin: 0;
@@ -41,11 +58,19 @@ const Layout = styled.div`
     @media (max-width: 920px) {
         grid-template-columns: 1fr;
     }
+
+    opacity: 0;
+    animation: ${fadeScale} 0.7s ease forwards;
+    animation-delay: 0.3s;
 `;
 
 const List = styled.div`
     display: grid;
     gap: 16px;
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.6s ease forwards;
+    animation-delay: 0.4s;
 `;
 
 const Panel = styled.div`
@@ -53,6 +78,10 @@ const Panel = styled.div`
     border-radius: 14px;
     background: #fff;
     padding: 16px;
+
+    opacity: 0;
+    animation: ${fadeScale} 0.6s ease forwards;
+    animation-delay: 0.3s;
 `;
 
 const Empty = styled(Panel)`
@@ -66,6 +95,7 @@ const Skeleton = styled.div`
     background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%);
     background-size: 400% 100%;
     animation: shimmer 1.1s infinite;
+
     @keyframes shimmer {
         0% {
             background-position: 100% 0;
@@ -74,6 +104,11 @@ const Skeleton = styled.div`
             background-position: -100% 0;
         }
     }
+`;
+
+const RideItem = styled.div`
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.5s ease forwards;
 `;
 
 export type ActiveFilters = {
@@ -119,10 +154,7 @@ export default function RidesPage() {
 
         return data
             .filter((ride) => {
-                // ✅ Price filter
                 if (maxPrice && ride.pricePerSeat > maxPrice) return false;
-
-                // ✅ Amenities filter
                 if (
                     activeFilters.airConditioning &&
                     !ride.amenities.airConditioning
@@ -136,7 +168,6 @@ export default function RidesPage() {
                     return false;
                 if (activeFilters.petsAllowed && !ride.amenities.petsAllowed)
                     return false;
-
                 return true;
             })
             .sort((a, b) => {
@@ -148,7 +179,7 @@ export default function RidesPage() {
                     case "seatsDesc":
                         return b.seatsAvailable - a.seatsAvailable;
                     default:
-                        return 0; // departure time sorting if you want
+                        return 0;
                 }
             });
     }, [data, activeFilters, maxPrice, sortBy]);
@@ -203,8 +234,13 @@ export default function RidesPage() {
 
                     {!isLoading && !error && filteredRides.length > 0 && (
                         <List>
-                            {filteredRides.map((ride: Ride) => (
-                                <RideCard key={ride._id} ride={ride} />
+                            {filteredRides.map((ride: Ride, i) => (
+                                <RideItem
+                                    key={ride._id}
+                                    style={{ animationDelay: `${0.1 * i}s` }}
+                                >
+                                    <RideCard ride={ride} />
+                                </RideItem>
                             ))}
                         </List>
                     )}

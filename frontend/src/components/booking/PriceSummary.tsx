@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { DollarSign } from "lucide-react";
 
 const Card = styled.section`
     background: #fff;
@@ -50,10 +49,7 @@ export default function PriceSummary({ pricePerSeat, passengers }: Props) {
 
     return (
         <Card aria-label="Price Summary">
-            <Title>
-                <DollarSign size={18} />
-                Price Summary
-            </Title>
+            <Title>Price Summary</Title>
             <Row>
                 <span>Price per seat</span>
                 <span>€ {pricePerSeat.toFixed(0)}</span>

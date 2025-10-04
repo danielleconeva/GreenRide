@@ -23,6 +23,9 @@ const Wrapper = styled.div`
     p {
         font-size: 1rem;
     }
+    &:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09);
+    }
 `;
 
 export default function EcoSearchBadge() {

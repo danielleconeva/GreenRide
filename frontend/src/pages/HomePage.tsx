@@ -1,8 +1,30 @@
 import { Link } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Search, Plus, Leaf, DollarSign, Users } from "lucide-react";
 import modernHeroGraphic from "../assets/modern-hero-graphic.jpg";
 import { theme } from "../styles/theme";
+
+const fadeUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
 
 const Section = styled.section<{ $bg?: string }>`
     font-family: ${({ theme }) => theme.fonts.body};
@@ -53,20 +75,21 @@ const Button = styled(Link)<{ $variant?: "primary" | "outline" }>`
     border-radius: 0.5rem;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease,
+        box-shadow 0.2s ease;
 
     ${({ $variant }) =>
         $variant === "outline"
             ? `
-        border: 0.8px solid ${theme.colors.primary};
+        border: 1px solid ${theme.colors.primary};
         color: ${theme.colors.primary};
         background: transparent;
 
         &:hover {
-          background: ${theme.colors.muted}; 
+          background: #ffffffed;
           color: ${theme.colors.primaryDark};
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 4px 17px rgba(0,0,0,0.06);
         }
       `
             : `
@@ -74,9 +97,9 @@ const Button = styled(Link)<{ $variant?: "primary" | "outline" }>`
         color: ${theme.colors.primaryForeground};
 
         &:hover {
-          background: ${theme.colors.primaryDark}; 
-          transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+              background: #22a499;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 6px 17px rgba(0, 0, 0, 0.12);
         }
       `}
 `;
@@ -92,6 +115,7 @@ const Hero = styled(Section)`
 const HeroContent = styled.div`
     flex: 1;
     z-index: 1;
+    animation: ${fadeUp} 0.8s ease forwards;
 `;
 
 const HeroImageWrapper = styled.div`
@@ -104,6 +128,7 @@ const HeroImageWrapper = styled.div`
         max-width: 80%;
         object-fit: cover;
         border-radius: 1rem;
+        animation: ${fadeIn} 1s ease forwards;
     }
 
     @media (max-width: 768px) {
@@ -127,6 +152,7 @@ const HeroTitle = styled.h1`
             ${theme.colors.primaryGlow}
         );
         -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 `;
@@ -138,22 +164,40 @@ const HeroText = styled.p`
     max-width: 600px;
 `;
 
-const BenefitCard = styled.div`
+const BenefitCard = styled.div<{ $delay?: number }>`
     background: ${theme.colors.card};
-    border: 1px solid ${theme.colors.mutedForeground}40;
+    border: 1px solid ${theme.colors.mutedForeground}30;
     border-radius: 1rem;
     padding: 2rem;
     text-align: center;
+    perspective: 1000px;
+
+    opacity: 0;
+    animation: ${fadeUp} 0.6s ease forwards;
+    animation-delay: ${({ $delay }) => $delay || 0}s;
+
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s ease;
+
+    &:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08),
+            0 4px 8px rgba(0, 0, 0, 0.06);
+    }
 `;
 
-const StatBox = styled.div`
+const StatBox = styled.div<{ $delay?: number }>`
     text-align: center;
+    opacity: 0;
+    animation: ${fadeIn} 0.6s ease forwards;
+    animation-delay: ${({ $delay }) => $delay || 0}s;
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 `;
 
 const CTABox = styled.div`
     margin: 0 auto;
     max-width: 900px;
-
     background: linear-gradient(
         135deg,
         ${theme.colors.primary},
@@ -197,15 +241,12 @@ const CTAPillButton = styled(Link)`
     font-weight: 500;
     text-decoration: none;
     font-size: 0.8rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
+        background: ${theme.colors.muted};
         transform: translateY(-1px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-    }
-    &:active {
-        transform: translateY(0);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 `;
 
@@ -220,9 +261,25 @@ const StepsGrid = styled.div`
     }
 `;
 
-const StepCard = styled.div`
+const StepCard = styled.div<{ $delay?: number }>`
     text-align: center;
-    padding: 1rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background: ${theme.colors.card};
+    border: 1px solid ${theme.colors.mutedForeground}25;
+
+    opacity: 0;
+    animation: ${fadeUp} 0.6s ease forwards;
+    animation-delay: ${({ $delay }) => $delay || 0}s;
+
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.35s ease, background 0.35s ease;
+
+    &:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        background: ${theme.colors.card};
+    }
 `;
 
 const StepCircle = styled.div`
@@ -236,7 +293,6 @@ const StepCircle = styled.div`
     font-size: 1.25rem;
     color: ${theme.colors.primaryForeground};
     background: ${theme.colors.primary};
-    box-shadow: 0 8px 20px ${theme.colors.primary}55;
 `;
 
 const StepTitle = styled.h3`
@@ -378,7 +434,7 @@ export default function HomePage() {
                     </Subtitle>
                     <Grid>
                         {benefits.map((b, i) => (
-                            <BenefitCard key={i}>
+                            <BenefitCard key={i} $delay={i * 0.2}>
                                 {b.icon}
                                 <h3>{b.title}</h3>
                                 <p>{b.description}</p>
@@ -392,7 +448,7 @@ export default function HomePage() {
                 <Container>
                     <Grid $cols={4}>
                         {stats.map((s, i) => (
-                            <StatBox key={i}>
+                            <StatBox key={i} $delay={i * 0.15}>
                                 <div
                                     style={{
                                         fontSize: "2rem",
@@ -424,8 +480,8 @@ export default function HomePage() {
                     </Subtitle>
 
                     <StepsGrid>
-                        {steps.map((s) => (
-                            <StepCard key={s.n}>
+                        {steps.map((s, i) => (
+                            <StepCard key={s.n} $delay={i * 0.2}>
                                 <StepCircle>{s.n}</StepCircle>
                                 <StepTitle>{s.title}</StepTitle>
                                 <StepDesc>{s.desc}</StepDesc>

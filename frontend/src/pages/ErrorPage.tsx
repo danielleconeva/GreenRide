@@ -12,8 +12,7 @@ const Wrapper = styled.div`
     padding: 2rem;
     background: ${theme.colors.muted};
     color: ${theme.colors.foreground};
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-        sans-serif;
+    font-family: ${({ theme }) => theme.fonts.body};
 `;
 
 const Title = styled.h1`

@@ -1,7 +1,31 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useEcoStats } from "../hooks/useEcoStats";
-
 import { Leaf, Award, Zap, Car, Home, Trophy, Sprout } from "lucide-react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+import EcoImpactFallback from "../components/EcoImpactFallback";
+
+const fadeUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const fadeInScale = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
 
 const Page = styled.div`
     max-width: 1200px;
@@ -10,6 +34,9 @@ const Page = styled.div`
     font-family: ${({ theme }) => theme.fonts.body};
     background: #fff;
     min-height: 100vh;
+
+    opacity: 0;
+    animation: ${fadeUp} 0.8s ease forwards;
 `;
 
 const Header = styled.header`
@@ -21,13 +48,21 @@ const Header = styled.header`
         font-weight: 700;
         margin-bottom: 0.75rem;
         color: #111827;
+        opacity: 0;
+        animation: ${fadeUp} 0.8s ease forwards;
+        animation-delay: 0.1s;
     }
+
     p {
         color: #6b7280;
         font-size: 1rem;
         max-width: 650px;
         margin: 0 auto;
         line-height: 1.5;
+
+        opacity: 0;
+        animation: ${fadeUp} 0.8s ease forwards;
+        animation-delay: 0.2s;
     }
 `;
 
@@ -36,7 +71,12 @@ const StatsGrid = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.25rem;
     margin-bottom: 2.5rem;
+
+    opacity: 0;
+    animation: ${fadeInScale} 0.8s ease forwards;
+    animation-delay: 0.3s;
 `;
+
 const Card = styled.div`
     background: #fff;
     border-radius: 16px;
@@ -47,27 +87,27 @@ const Card = styled.div`
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 
     &:hover {
-        transform: translateY(-4px); /* smoother lift */
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* soft shadow */
+        transform: translateY(-4px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     }
 
     .icon-wrapper {
         width: 48px;
         height: 48px;
         border-radius: 50%;
-        background: #ecfdf5; /* unified green background */
+        background: #ecfdf5;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto 1rem;
-        color: #14b8a6; /* green icon */
+        color: #14b8a6;
         transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
     }
 
     &:hover .icon-wrapper {
-        background: #14b8a6; /* invert background */
-        color: #fff; /* invert icon color */
-        transform: scale(1.05); /* gentle pulse */
+        background: #14b8a6;
+        color: #fff;
+        transform: scale(1.05);
     }
 
     h2 {
@@ -79,7 +119,7 @@ const Card = styled.div`
     }
 
     &:hover h2 {
-        color: #0f766e; /* slightly darker green */
+        color: #0f766e;
     }
 
     p {
@@ -95,6 +135,10 @@ const Section = styled.section`
     padding: 1.5rem 3rem;
     border: 1px solid #e5e7eb;
 
+    opacity: 0;
+    animation: ${fadeUp} 0.8s ease forwards;
+    animation-delay: 0.4s;
+
     h3 {
         font-size: 1.125rem;
         font-weight: 700;
@@ -108,13 +152,14 @@ const Section = styled.section`
 
 const AchievementList = styled.div`
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* ✅ always 2 per row */
+    grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
 
     @media (max-width: 768px) {
-        grid-template-columns: 1fr; /* ✅ stack on smaller screens */
+        grid-template-columns: 1fr;
     }
 `;
+
 const AchievementCard = styled.div<{ unlocked: boolean }>`
     padding: 1.25rem;
     padding-right: 4rem;
@@ -126,8 +171,8 @@ const AchievementCard = styled.div<{ unlocked: boolean }>`
 
     &:hover {
         opacity: 1;
-        transform: translateY(-4px); /* subtle movement */
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* gentle hover shadow */
+        transform: translateY(-4px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     }
 
     .achievement-header {
@@ -195,7 +240,12 @@ const ImpactGrid = styled.div`
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 1.25rem;
     margin-top: 1.25rem;
+
+    opacity: 0;
+    animation: ${fadeInScale} 0.8s ease forwards;
+    animation-delay: 0.5s;
 `;
+
 const ImpactCard = styled.div`
     background: #fff;
     border-radius: 12px;
@@ -206,8 +256,8 @@ const ImpactCard = styled.div`
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
-        transform: translateY(-4px); /* subtle lift */
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* soft glow */
+        transform: translateY(-4px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     }
 
     .icon-wrapper {
@@ -224,9 +274,9 @@ const ImpactCard = styled.div`
     }
 
     &:hover .icon-wrapper {
-        background: #14b8a6; /* invert colors on hover */
+        background: #14b8a6;
         color: #fff;
-        transform: scale(1.05); /* tiny pulse */
+        transform: scale(1.05);
     }
 
     h2 {
@@ -238,7 +288,7 @@ const ImpactCard = styled.div`
     }
 
     &:hover h2 {
-        color: #0f766e; /* darker green on hover */
+        color: #0f766e;
     }
 
     p {
@@ -248,8 +298,12 @@ const ImpactCard = styled.div`
 `;
 
 export default function EcoImpactPage() {
+    const user = useSelector((state: RootState) => state.auth.user);
     const { data, isLoading, error } = useEcoStats();
 
+    if (!user) {
+        return <EcoImpactFallback />;
+    }
     if (isLoading)
         return (
             <Page>
@@ -312,6 +366,7 @@ export default function EcoImpactPage() {
                     <p>Total Rides</p>
                 </Card>
             </StatsGrid>
+
             <Section>
                 <h3>
                     <Trophy size={18} />
@@ -356,6 +411,7 @@ export default function EcoImpactPage() {
                     ))}
                 </AchievementList>
             </Section>
+
             <Section>
                 <h3>Your Impact in Perspective</h3>
                 <p

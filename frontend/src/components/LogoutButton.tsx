@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../store/store";
 import { logout } from "../store/authSlice";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const LogoutBtn = styled.button`
     background: none;
@@ -29,8 +30,15 @@ const LogoutBtn = styled.button`
 
 export default function LogoutButton() {
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate("/");
+    };
+
     return (
-        <LogoutBtn type="button" onClick={() => dispatch(logout())}>
+        <LogoutBtn type="button" onClick={handleLogout}>
             Log Out
         </LogoutBtn>
     );

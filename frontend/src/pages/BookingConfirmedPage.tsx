@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { CheckCircle, Home, Leaf } from "lucide-react";
 import BookingSummary from "../components/confirmed-booking/BookingSummary";
 import NextSteps from "../components/confirmed-booking/NextSteps";
@@ -24,16 +24,33 @@ type LocationState = {
     };
 };
 
+const fadeSlideUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const fadeScale = keyframes`
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+`;
+
 const Wrap = styled.div`
     max-width: 1100px;
     margin: 0 auto;
     padding: 5px 0 80px;
     font-family: ${({ theme }) => theme.fonts.body};
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.7s ease forwards;
 `;
 
 const Header = styled.header`
     text-align: center;
     margin: 10px 0 24px;
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.6s ease forwards;
+    animation-delay: 0.15s;
 `;
 
 const IconWrapper = styled.div`
@@ -45,22 +62,35 @@ const IconWrapper = styled.div`
     background: rgba(20, 184, 166, 0.12);
     margin: 0 auto;
     margin-bottom: 1rem;
+
+    opacity: 0;
+    animation: ${fadeScale} 0.6s ease forwards;
+    animation-delay: 0.25s;
 `;
 
 const Icon = styled(CheckCircle).attrs({ size: 50, strokeWidth: 2.5 })`
     color: ${({ theme }) => theme.colors.primary};
     flex-shrink: 0;
 `;
+
 const Title = styled.h1`
     font-size: 2rem;
     margin: 12px 0 19px;
     color: #0f172a;
     font-weight: 800;
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.6s ease forwards;
+    animation-delay: 0.35s;
 `;
 
 const Subtitle = styled.p`
     margin: 0 0 0.4rem 0;
     color: #475569;
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.6s ease forwards;
+    animation-delay: 0.45s;
 `;
 
 const Badge = styled.div`
@@ -75,6 +105,10 @@ const Badge = styled.div`
     color: #36393e;
     margin-top: 10px;
     margin-bottom: 0.7rem;
+
+    opacity: 0;
+    animation: ${fadeScale} 0.6s ease forwards;
+    animation-delay: 0.55s;
 `;
 
 const Card = styled.section`
@@ -84,6 +118,10 @@ const Card = styled.section`
     padding: 24px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
     margin-bottom: 2.5rem;
+
+    opacity: 0;
+    animation: ${fadeScale} 0.6s ease forwards;
+    animation-delay: 0.65s;
 `;
 
 const ButtonsRow = styled.div`
@@ -91,6 +129,10 @@ const ButtonsRow = styled.div`
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-top: 35px;
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.6s ease forwards;
+    animation-delay: 0.85s;
 
     @media (max-width: 520px) {
         grid-template-columns: 1fr;
@@ -157,10 +199,11 @@ export default function BookingConfirmedPage() {
                     <IconWrapper>
                         <Icon aria-hidden="true" />
                     </IconWrapper>
-                    <Title>Booking Confirmed</Title>
+                    <Title>Booking Details Unavailable</Title>
                     <Subtitle>
-                        Your confirmation details are not available. Please
-                        reopen this page from the booking flow.
+                        We couldn’t find your confirmation details. Please
+                        reopen this page from the booking flow or check your
+                        bookings.
                     </Subtitle>
                 </Header>
                 <Narrow>

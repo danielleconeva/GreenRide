@@ -147,20 +147,25 @@ const Submit = styled.button`
     transform: translateZ(0);
 
     &:hover {
-        background: #0f766e;
-        transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(20, 184, 166, 0.25);
+        background: #22a499;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
     }
 
     &:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    &:focus {
         outline: none;
         box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
-        transform: translateY(1px);
     }
 
     &:disabled {
-        opacity: 0.7;
         cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
     }
 `;
 
@@ -219,7 +224,7 @@ function minutesBetween(depTime: string, arrTime: string): number {
 function formatDate(dateStr?: string) {
     if (!dateStr) return "";
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
-    return dateStr.split("T")[0]; // 2025-10-02T00:00:00.000Z -> 2025-10-02
+    return dateStr.split("T")[0];
 }
 
 function formatTime(timeStr?: string) {
@@ -227,7 +232,7 @@ function formatTime(timeStr?: string) {
     if (/^\d{2}:\d{2}$/.test(timeStr)) return timeStr;
     try {
         const d = new Date(timeStr);
-        return d.toISOString().substring(11, 16); // HH:mm
+        return d.toISOString().substring(11, 16);
     } catch {
         return "";
     }
@@ -237,8 +242,9 @@ type PublishFormProps = {
     submitting?: boolean;
     serverError?: string;
     createdRide?: Ride | null;
-    initialValues?: Partial<Ride>; // 👈 NEW
+    initialValues?: Partial<Ride>;
 };
+
 export default function PublishForm({
     onSubmit,
     submitting,
@@ -248,6 +254,27 @@ export default function PublishForm({
 }: PublishFormProps) {
     const [from, setFrom] = useState(initialValues.from || "");
     const [to, setTo] = useState(initialValues.to || "");
+    const [departureDate, setDepartureDate] = useState(
+        formatDate(initialValues.departureDate)
+    );
+    const [departureTime, setDepartureTime] = useState(
+        formatTime(initialValues.departureTime)
+    );
+    const [arrivalTime, setArrivalTime] = useState(
+        formatTime(initialValues.arrivalTime)
+    );
+    const [pricePerSeat, setPricePerSeat] = useState(
+        initialValues.pricePerSeat?.toString() || ""
+    );
+
+    const isFormValid = !!(
+        from.trim() &&
+        to.trim() &&
+        departureDate &&
+        departureTime &&
+        arrivalTime &&
+        pricePerSeat
+    );
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -256,13 +283,12 @@ export default function PublishForm({
         const getStr = (name: string) =>
             typeof fd.get(name) === "string" ? (fd.get(name) as string) : "";
         const getNum = (name: string, fallback = 0) => {
-            const n = Number(getStr(name));
+            const raw = fd.get(name);
+            if (raw === null) return fallback;
+            const n = Number(raw);
             return Number.isFinite(n) ? n : fallback;
         };
 
-        const departureDate = getStr("departureDate");
-        const departureTime = getStr("departureTime");
-        const arrivalTime = getStr("arrivalTime");
         const durationMin = minutesBetween(departureTime, arrivalTime);
         const notes = getStr("notes").trim();
 
@@ -273,7 +299,7 @@ export default function PublishForm({
             departureTime,
             arrivalTime,
             durationMin,
-            pricePerSeat: getNum("pricePerSeat", 0),
+            pricePerSeat: Number(pricePerSeat) || 0,
             seatsAvailable: getNum("seatsAvailable", 1),
             amenities: {
                 smokingAllowed: Boolean(fd.get("amenities.smokingAllowed")),
@@ -297,7 +323,7 @@ export default function PublishForm({
 
                 <FlexRow>
                     <Group>
-                        <Label htmlFor="from">Starting Point</Label>
+                        <Label htmlFor="from">Starting Point *</Label>
                         <CityInput
                             id="from"
                             name="from"
@@ -309,7 +335,7 @@ export default function PublishForm({
                     </Group>
 
                     <Group>
-                        <Label htmlFor="to">Destination</Label>
+                        <Label htmlFor="to">Destination *</Label>
                         <CityInput
                             id="to"
                             name="to"
@@ -323,36 +349,36 @@ export default function PublishForm({
 
                 <FlexRow>
                     <Group>
-                        <Label htmlFor="departureDate">Departure Date</Label>
+                        <Label htmlFor="departureDate">Departure Date *</Label>
                         <Input
                             id="departureDate"
                             name="departureDate"
                             type="date"
-                            defaultValue={formatDate(
-                                initialValues.departureDate
-                            )}
+                            min={new Date().toISOString().split("T")[0]}
+                            value={departureDate}
+                            onChange={(e) => setDepartureDate(e.target.value)}
                         />
                     </Group>
 
                     <Group>
-                        <Label htmlFor="departureTime">Departure Time</Label>
+                        <Label htmlFor="departureTime">Departure Time *</Label>
                         <Input
                             id="departureTime"
                             name="departureTime"
                             type="time"
-                            defaultValue={formatTime(
-                                initialValues.departureTime
-                            )}
+                            value={departureTime}
+                            onChange={(e) => setDepartureTime(e.target.value)}
                         />
                     </Group>
 
                     <Group>
-                        <Label htmlFor="arrivalTime">Arrival Time</Label>
+                        <Label htmlFor="arrivalTime">Arrival Time *</Label>
                         <Input
                             id="arrivalTime"
                             name="arrivalTime"
                             type="time"
-                            defaultValue={formatTime(initialValues.arrivalTime)}
+                            value={arrivalTime}
+                            onChange={(e) => setArrivalTime(e.target.value)}
                         />
                     </Group>
                 </FlexRow>
@@ -376,14 +402,21 @@ export default function PublishForm({
                     </Group>
 
                     <Group>
-                        <Label htmlFor="pricePerSeat">Price per seat</Label>
+                        <Label htmlFor="pricePerSeat">Price per seat *</Label>
                         <Input
                             id="pricePerSeat"
                             name="pricePerSeat"
-                            type="number"
+                            type="text"
+                            inputMode="numeric"
                             placeholder="Enter price per seat"
-                            defaultValue={initialValues.pricePerSeat}
-                            onWheel={(e) => e.currentTarget.blur()}
+                            value={pricePerSeat}
+                            onChange={(e) => {
+                                const onlyNums = e.target.value.replace(
+                                    /[^0-9]/g,
+                                    ""
+                                );
+                                setPricePerSeat(onlyNums);
+                            }}
                         />
                     </Group>
                 </FlexRow>
@@ -458,7 +491,7 @@ export default function PublishForm({
                 </Group>
             </FieldsetCard>
 
-            <Submit type="submit" disabled={submitting}>
+            <Submit type="submit" disabled={submitting || !isFormValid}>
                 {submitting
                     ? "Saving…"
                     : initialValues._id

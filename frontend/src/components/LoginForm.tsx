@@ -44,7 +44,8 @@ const FormWrapper = styled.form`
         margin: 0.9rem auto 0;
 
         &:hover {
-            opacity: 0.9;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
         }
         &:disabled {
             background: #ccc;

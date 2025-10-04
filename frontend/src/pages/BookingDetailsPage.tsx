@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { ArrowLeft } from "lucide-react";
 
 import TripDetails from "../components/booking/TripDetails";
@@ -12,10 +12,24 @@ import PriceSummary from "../components/booking/PriceSummary";
 import EcoBadge from "../components/booking/EcoBadge";
 import useRide from "../hooks/useRide";
 import useCreateBooking from "../hooks/useCreateBooking";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store/store";
+
+const fadeSlideUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const fadeScale = keyframes`
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+`;
 
 const TopBar = styled.div`
     max-width: 1100px;
     margin: 0 auto 12px;
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.6s ease forwards;
 `;
 
 const BackLink = styled.button`
@@ -54,6 +68,10 @@ const Page = styled.div`
     gap: 24px;
     font-family: ${({ theme }) => theme.fonts.body};
 
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.7s ease forwards;
+    animation-delay: 0.15s;
+
     @media (max-width: 1024px) {
         grid-template-columns: 1fr;
     }
@@ -62,13 +80,50 @@ const Page = styled.div`
 const Column = styled.div`
     display: grid;
     gap: 16px;
+
+    > * {
+        opacity: 0;
+        animation: ${fadeSlideUp} 0.6s ease forwards;
+    }
+
+    > *:nth-child(1) {
+        animation-delay: 0.2s;
+    }
+    > *:nth-child(2) {
+        animation-delay: 0.3s;
+    }
+    > *:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    > *:nth-child(4) {
+        animation-delay: 0.5s;
+    }
 `;
+
 const Aside = styled.div`
     position: sticky;
     top: 16px;
     display: grid;
     gap: 16px;
     height: fit-content;
+
+    > * {
+        opacity: 0;
+        animation: ${fadeScale} 0.6s ease forwards;
+    }
+
+    > *:nth-child(1) {
+        animation-delay: 0.25s;
+    }
+    > *:nth-child(2) {
+        animation-delay: 0.35s;
+    }
+    > *:nth-child(3) {
+        animation-delay: 0.45s;
+    }
+    > *:nth-child(4) {
+        animation-delay: 0.55s;
+    }
 `;
 
 const PrimaryBtn = styled.button`
@@ -140,7 +195,10 @@ const GhostBtn = styled.button`
         cursor: not-allowed;
     }
 `;
+
 export default function BookingDetailsPage() {
+    const user = useSelector((state: RootState) => state.auth.user);
+
     const { rideId } = useParams();
     const navigate = useNavigate();
     const { data: ride, isLoading, isError } = useRide(rideId);
@@ -174,6 +232,10 @@ export default function BookingDetailsPage() {
     }
 
     const handleConfirm = async () => {
+        if (!user) {
+            navigate("/login", { state: { from: `/rides/${rideId}/confirm` } });
+            return;
+        }
         try {
             const { booking } = await createBooking({
                 rideId: ride._id,

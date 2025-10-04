@@ -76,6 +76,12 @@ const Input = styled.input`
     &[type="date"] {
         padding-left: 40px;
     }
+    &:-webkit-autofill {
+        box-shadow: 0 0 0px 1000px #fff inset !important;
+        -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+        -webkit-text-fill-color: #4e4f54 !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
 `;
 
 const Suggestions = styled.ul`
@@ -152,7 +158,6 @@ const Select = styled.select`
         box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
     }
 `;
-
 const Submit = styled.button`
     display: flex;
     align-items: center;
@@ -168,14 +173,29 @@ const Submit = styled.button`
     font-size: 1rem;
     margin: 18px auto 0;
     cursor: pointer;
+    transition: background 0.25s ease, transform 0.2s ease,
+        box-shadow 0.25s ease;
 
     &:hover {
-        background: #0f766e;
+        background: #22a499;
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    &:active {
+        transform: translateY(0) scale(0.98);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     }
 
     &:focus {
         outline: none;
         box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.3);
+    }
+
+    &:disabled {
+        cursor: not-allowed; /* pointer with disabled symbol */
+        transform: none;
+        box-shadow: none;
     }
 `;
 
@@ -196,6 +216,7 @@ export default function SearchForm() {
                   .filter((c) => c.toLowerCase().includes(input.toLowerCase()))
                   .slice(0, 10)
             : [];
+    const isFormValid = departure.trim() && destination.trim() && date;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -215,7 +236,7 @@ export default function SearchForm() {
             <Form onSubmit={handleSubmit}>
                 <Row>
                     <Group>
-                        <Label htmlFor="departure">Leaving From</Label>
+                        <Label htmlFor="departure">Leaving From *</Label>
                         <FieldWrap>
                             <MapPin
                                 style={{
@@ -260,7 +281,7 @@ export default function SearchForm() {
                     </Group>
 
                     <Group>
-                        <Label htmlFor="destination">Going To</Label>
+                        <Label htmlFor="destination">Going To *</Label>
                         <FieldWrap>
                             <MapPin
                                 style={{
@@ -310,7 +331,7 @@ export default function SearchForm() {
 
                 <Row>
                     <Group>
-                        <Label htmlFor="date">Departure Date</Label>
+                        <Label htmlFor="date">Departure Date *</Label>
                         <FieldWrap>
                             <Calendar
                                 style={{
@@ -325,6 +346,7 @@ export default function SearchForm() {
                                 id="date"
                                 type="date"
                                 name="date"
+                                min={new Date().toISOString().split("T")[0]}
                                 onChange={(e) => setDate(e.target.value)}
                             />
                         </FieldWrap>
@@ -349,7 +371,7 @@ export default function SearchForm() {
                     </Group>
                 </Row>
 
-                <Submit type="submit">
+                <Submit type="submit" disabled={!isFormValid}>
                     <Search size={18} />
                     Search Rides
                 </Submit>

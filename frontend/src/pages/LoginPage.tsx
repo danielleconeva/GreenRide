@@ -1,5 +1,5 @@
 import { Leaf } from "lucide-react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import type { AppDispatch, RootState } from "../store/store";
 import bubbleImage from "../assets/home-bubble-min.png";
@@ -9,11 +9,41 @@ import LoginForm from "../components/LoginForm";
 import { useLoginForm } from "../hooks/useLoginForm";
 import { useNavigate } from "react-router-dom";
 
+const fadeSlideUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const fadeScale = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+const float = keyframes`
+  0%   { transform: translateY(0) rotate(240deg); }
+  50%  { transform: translateY(-20px) rotate(245deg); }
+  100% { transform: translateY(0) rotate(240deg); }
+`;
+
 const LeafIcon = styled(Leaf)`
     background: ${({ theme }) => theme.colors.gradientHero};
     padding: 0.8rem;
     border-radius: 50%;
     color: white;
+    opacity: 0;
+    animation: ${fadeScale} 0.64s ease forwards;
 `;
 
 const Wrapper = styled.div`
@@ -25,6 +55,9 @@ const Wrapper = styled.div`
     position: relative;
     background: ${({ theme }) => theme.colors.background};
     overflow: hidden;
+
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.72s ease forwards;
 `;
 
 const BackgroundImageLeft = styled.img`
@@ -37,6 +70,8 @@ const BackgroundImageLeft = styled.img`
     z-index: 0;
     pointer-events: none;
     transform: rotate(240deg);
+
+    animation: ${float} 4.8s ease-in-out infinite;
 `;
 
 const BackgroundImageRight = styled.img`
@@ -49,6 +84,8 @@ const BackgroundImageRight = styled.img`
     z-index: 0;
     pointer-events: none;
     transform: rotate(340deg);
+
+    animation: ${float} 5.6s ease-in-out infinite;
 `;
 
 const FormContainer = styled.div`
@@ -62,6 +99,10 @@ const FormContainer = styled.div`
     width: 100%;
     padding-bottom: 4rem;
     margin-right: 15rem;
+
+    opacity: 0;
+    animation: ${fadeScale} 0.8s ease forwards;
+    animation-delay: 0.24s;
 `;
 
 const IntroText = styled.div`
@@ -70,9 +111,12 @@ const IntroText = styled.div`
     padding-bottom: 5rem;
     margin-left: 3rem;
 
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.64s ease forwards;
+    animation-delay: 0.4s;
+
     h1 {
         margin-bottom: 0.5rem;
-        color: #292727;
         font-size: 2.2rem;
         color: ${({ theme }) => theme.colors.foreground};
     }

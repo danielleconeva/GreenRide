@@ -18,6 +18,7 @@ const Input = styled.input<{ $variant?: "default" | "publish" }>`
     outline: none;
     color: #111827;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    font-family: ${({ theme }) => theme.fonts.body};
 
     &:focus {
         border-color: #14b8a6;
@@ -26,6 +27,12 @@ const Input = styled.input<{ $variant?: "default" | "publish" }>`
 
     &::placeholder {
         color: #9ca3af;
+    }
+    &:-webkit-autofill {
+        box-shadow: 0 0 0px 1000px #fff inset !important;
+        -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+        -webkit-text-fill-color: #4e4f54 !important;
+        transition: background-color 5000s ease-in-out 0s;
     }
 `;
 
