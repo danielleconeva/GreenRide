@@ -12,7 +12,7 @@ const rideSchema = new Schema(
         arrivalTime: { type: String, required: true },
         durationMin: { type: Number, required: true },
         pricePerSeat: { type: Number, required: true },
-        seatsAvailable: { type: Number, required: true, min: 1 },
+        seatsAvailable: { type: Number, required: true, min: 0 },
 
         amenities: {
             airConditioning: { type: Boolean, default: false },

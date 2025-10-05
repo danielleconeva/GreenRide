@@ -78,7 +78,10 @@ export default {
 
         const updatedRide = await Ride.findOneAndUpdate(
             { _id: rideId, seatsAvailable: { $gte: seats } },
-            { $inc: { seatsAvailable: -seats }, $addToSet: { passengers: passengerId } },
+            {
+                $inc: { seatsAvailable: -seats },
+                $addToSet: { passengers: passengerId }
+            },
             { new: true }
         );
         if (!updatedRide) {
