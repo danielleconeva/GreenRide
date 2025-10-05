@@ -1,4 +1,6 @@
+// components/common/ConfirmModal.tsx
 import styled from "styled-components";
+import ReactDOM from "react-dom";
 
 const Overlay = styled.div`
     position: fixed;
@@ -6,12 +8,22 @@ const Overlay = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
     padding: 1rem;
+    animation: fadeInOverlay 0.3s ease;
+
+    @keyframes fadeInOverlay {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
 `;
 
 const ModalBox = styled.div`
@@ -23,32 +35,22 @@ const ModalBox = styled.div`
     max-width: 100%;
     text-align: center;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 0.25s ease;
+    animation: fadeInModal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
-    @keyframes fadeIn {
+    @keyframes fadeInModal {
         from {
             opacity: 0;
-            transform: scale(0.95);
+            transform: translateY(-12px) scale(0.98);
         }
         to {
             opacity: 1;
-            transform: scale(1);
+            transform: translateY(0) scale(1);
         }
     }
 
     @media (max-width: 640px) {
         padding: 1.5rem;
         width: 90%;
-    }
-
-    @media (min-width: 1600px) {
-        padding: 2.5rem;
-        width: 450px;
-    }
-
-    @media (min-width: 1920px) {
-        padding: 3rem;
-        width: 500px;
     }
 `;
 
@@ -57,28 +59,12 @@ const Title = styled.h3`
     margin-bottom: 1rem;
     color: #373333;
     font-weight: 600;
-
-    @media (max-width: 640px) {
-        font-size: 1.1rem;
-    }
-
-    @media (min-width: 1600px) {
-        font-size: 1.35rem;
-    }
 `;
 
 const Message = styled.p`
     color: #666;
     font-size: 0.95rem;
     margin-bottom: 1.25rem;
-
-    @media (max-width: 640px) {
-        font-size: 0.9rem;
-    }
-
-    @media (min-width: 1600px) {
-        font-size: 1rem;
-    }
 `;
 
 const Buttons = styled.div`
@@ -101,52 +87,55 @@ const Button = styled.button<{ $variant?: "cancel" | "confirm" }>`
     ${({ $variant }) =>
         $variant === "confirm"
             ? `
-        background: #14b8a6;
-        color: white;
-        &:hover { background: #0d9488; }
-      `
+    background: #14b8a6;
+    color: white;
+    &:hover { background: #0d9488; }
+  `
             : `
-        background: #f3f4f6;
-        color: #111;
-        &:hover { background: #e5e7eb; }
-      `}
-
-    @media (max-width: 640px) {
-        padding: 0.55rem 1rem;
-        font-size: 0.95rem;
-    }
-
-    @media (min-width: 1600px) {
-        padding: 0.75rem 1.4rem;
-        font-size: 1.05rem;
-    }
-
-    @media (min-width: 1920px) {
-        padding: 0.85rem 1.6rem;
-        font-size: 1.1rem;
-    }
+    background: #f3f4f6;
+    color: #111;
+    &:hover { background: #e5e7eb; }
+  `}
 `;
 
-type Props = {
+type ConfirmModalProps = {
+    title?: string;
+    message?: string;
+    confirmLabel?: string;
+    cancelLabel?: string;
     onConfirm: () => void;
     onCancel: () => void;
 };
 
-export default function ConfirmModal({ onConfirm, onCancel }: Props) {
+function ConfirmModalContent({
+    title = "Are you sure?",
+    message = "This action cannot be undone.",
+    confirmLabel = "Confirm",
+    cancelLabel = "Cancel",
+    onConfirm,
+    onCancel,
+}: ConfirmModalProps) {
     return (
         <Overlay>
             <ModalBox>
-                <Title>Are you sure you want to delete this ride?</Title>
-                <Message>This action cannot be undone.</Message>
+                <Title>{title}</Title>
+                <Message>{message}</Message>
                 <Buttons>
                     <Button $variant="cancel" onClick={onCancel}>
-                        Cancel
+                        {cancelLabel}
                     </Button>
                     <Button $variant="confirm" onClick={onConfirm}>
-                        Delete
+                        {confirmLabel}
                     </Button>
                 </Buttons>
             </ModalBox>
         </Overlay>
+    );
+}
+
+export default function ConfirmModal(props: ConfirmModalProps) {
+    return ReactDOM.createPortal(
+        <ConfirmModalContent {...props} />,
+        document.body
     );
 }

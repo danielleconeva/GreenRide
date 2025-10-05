@@ -15,14 +15,15 @@ import useDriver from "../hooks/useDriver";
 
 const Card = styled.div`
     display: flex;
-    flex-wrap: wrap;
     align-items: flex-start;
+    justify-content: space-between;
     gap: 24px;
     padding: 24px;
     border: 1px solid #e5e7eb;
     border-radius: 16px;
     background: #fff;
     transition: box-shadow 0.15s ease, transform 0.06s ease;
+    flex-wrap: nowrap;
 
     &:hover {
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
@@ -32,7 +33,6 @@ const Card = styled.div`
     @media (max-width: 900px) {
         flex-direction: column;
         align-items: stretch;
-        flex-wrap: nowrap;
         gap: 16px;
         padding: 16px;
     }
@@ -351,19 +351,20 @@ const RightCol = styled.div`
     align-items: center;
     justify-content: center;
     gap: 16px;
-    min-width: 0;
-    width: 100%;
+    flex-shrink: 0;
+    min-width: 180px;
+    text-align: center;
 
     .price {
         color: #14b8a6;
         font-size: 1.5rem;
         font-weight: 700;
         line-height: 1;
-        text-align: center;
 
         .currency {
             font-size: 1.2rem;
         }
+
         small {
             color: #6b7280;
             font-weight: 600;
@@ -393,26 +394,26 @@ const RightCol = styled.div`
     }
 
     .cta {
-        width: 100%;
-        height: 44px;
+        width: 140px;
+        height: 40px;
         border-radius: 12px;
         border: 0;
         background: #14b8a6;
         color: #fff;
         font-weight: 800;
         cursor: pointer;
-        font-size: 1rem;
+        font-size: 0.9rem;
         transition: background-color 0.15s ease;
         &:hover {
             background: #0f766e;
         }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 900px) {
+        width: 100%;
         .cta {
             width: 130px;
             height: 36px;
-            border-radius: 8px;
             font-size: 0.85rem;
             align-self: center;
         }
@@ -420,7 +421,6 @@ const RightCol = styled.div`
 
     @media (min-width: 1600px) {
         min-width: 200px;
-        width: auto;
         .price {
             font-size: 1.7rem;
             .currency {
@@ -430,7 +430,6 @@ const RightCol = styled.div`
         .cta {
             width: 160px;
             height: 44px;
-            font-size: 0.95rem;
         }
     }
 
@@ -444,10 +443,6 @@ const RightCol = styled.div`
             small {
                 font-size: 0.85rem;
             }
-        }
-        .seats {
-            font-size: 0.9rem;
-            padding: 8px 14px;
         }
         .cta {
             width: 180px;

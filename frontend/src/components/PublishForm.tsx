@@ -120,19 +120,37 @@ const Input = styled.input`
 
 const Select = styled.select`
     height: 48px;
-    padding: 0 16px;
+    padding: 0 40px 0 16px; /* ✅ extra right padding for arrow */
     border: 1px solid #d1d5db;
     border-radius: 8px;
     background: #fff;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
     font-family: ${({ theme }) => theme.fonts.body};
+    color: #4e4f54;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    appearance: none; /* ✅ hide browser’s default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg fill='none' stroke='%236b7280' stroke-width='2' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E<path stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center; /* ✅ arrow spacing */
+    background-size: 18px 18px;
 
     &:focus {
         outline: none;
         border-color: #10b981;
         box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1rem;
+        padding-right: 44px;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1.05rem;
+        padding-right: 48px;
     }
 `;
 
@@ -411,6 +429,7 @@ export default function PublishForm({
                             min={new Date().toISOString().split("T")[0]}
                             value={departureDate}
                             onChange={(e) => setDepartureDate(e.target.value)}
+                            style={{ cursor: "pointer" }}
                         />
                     </Group>
 
@@ -422,6 +441,7 @@ export default function PublishForm({
                             type="time"
                             value={departureTime}
                             onChange={(e) => setDepartureTime(e.target.value)}
+                            style={{ cursor: "pointer" }}
                         />
                     </Group>
 
@@ -433,6 +453,7 @@ export default function PublishForm({
                             type="time"
                             value={arrivalTime}
                             onChange={(e) => setArrivalTime(e.target.value)}
+                            style={{ cursor: "pointer" }}
                         />
                     </Group>
                 </FlexRow>

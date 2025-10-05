@@ -15,23 +15,6 @@ const Card = styled.section`
     padding-top: 1rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-
-    @media (max-width: 900px) {
-        padding: 1.5rem;
-    }
-
-    @media (max-width: 640px) {
-        padding: 1.25rem;
-        border-radius: 12px;
-    }
-
-    @media (min-width: 1600px) {
-        padding: 2.5rem;
-    }
-
-    @media (min-width: 1920px) {
-        padding: 3rem;
-    }
 `;
 
 const Title = styled.h3`
@@ -39,40 +22,12 @@ const Title = styled.h3`
     font-weight: 600;
     color: #353333;
     margin-bottom: 1.5rem;
-    transition: font-size 0.3s ease;
-
-    @media (max-width: 900px) {
-        font-size: 1.35rem;
-        margin-bottom: 1.25rem;
-    }
-
-    @media (max-width: 640px) {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-        text-align: center;
-    }
-
-    @media (min-width: 1600px) {
-        font-size: 1.75rem;
-    }
-
-    @media (min-width: 1920px) {
-        font-size: 1.9rem;
-    }
 `;
 
 const RideList = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
-
-    @media (min-width: 1600px) {
-        gap: 20px;
-    }
-
-    @media (min-width: 1920px) {
-        gap: 24px;
-    }
 `;
 
 const RideItem = styled.div`
@@ -87,22 +42,6 @@ const RideItem = styled.div`
     padding-bottom: 1.5rem;
     flex-wrap: wrap;
     transition: all 0.25s ease;
-
-    @media (max-width: 900px) {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.25rem;
-        margin: 0.5rem 0;
-        padding: 1.25rem;
-    }
-
-    @media (min-width: 1600px) {
-        padding: 1.75rem;
-    }
-
-    @media (min-width: 1920px) {
-        padding: 2rem;
-    }
 `;
 
 const RideInfo = styled.div`
@@ -112,18 +51,6 @@ const RideInfo = styled.div`
     font-size: 0.9rem;
     font-weight: 500;
     color: #50535a;
-
-    @media (max-width: 640px) {
-        font-size: 0.85rem;
-    }
-
-    @media (min-width: 1600px) {
-        font-size: 0.95rem;
-    }
-
-    @media (min-width: 1920px) {
-        font-size: 1rem;
-    }
 `;
 
 const Row = styled.div`
@@ -141,24 +68,6 @@ const Row = styled.div`
         margin-bottom: 0.4rem;
         font-size: 1rem;
     }
-
-    @media (max-width: 640px) {
-        .map {
-            font-size: 0.9rem;
-        }
-    }
-
-    @media (min-width: 1600px) {
-        .map {
-            font-size: 1.05rem;
-        }
-    }
-
-    @media (min-width: 1920px) {
-        .map {
-            font-size: 1.1rem;
-        }
-    }
 `;
 
 const Status = styled.span`
@@ -171,20 +80,6 @@ const Status = styled.span`
     display: inline-flex;
     align-items: center;
     margin-right: 1rem;
-
-    @media (max-width: 640px) {
-        font-size: 0.8rem;
-        padding: 0.25rem 0.7rem;
-    }
-
-    @media (min-width: 1600px) {
-        font-size: 1rem;
-    }
-
-    @media (min-width: 1920px) {
-        font-size: 1.1rem;
-        padding: 0.4rem 1rem;
-    }
 `;
 
 const RideActions = styled.div`
@@ -192,21 +87,6 @@ const RideActions = styled.div`
     flex-direction: column;
     align-items: flex-end;
     gap: 12px;
-    font-size: 0.9rem;
-
-    @media (max-width: 900px) {
-        width: 100%;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    @media (min-width: 1600px) {
-        gap: 14px;
-    }
-
-    @media (min-width: 1920px) {
-        gap: 16px;
-    }
 `;
 
 const Price = styled.span`
@@ -214,40 +94,11 @@ const Price = styled.span`
     color: ${({ theme }) => theme.colors.primary};
     font-size: 1rem;
     margin: 2rem 0 0.5rem 0;
-
-    @media (max-width: 900px) {
-        margin: 0;
-        font-size: 0.95rem;
-    }
-
-    @media (max-width: 640px) {
-        font-size: 0.9rem;
-    }
-
-    @media (min-width: 1600px) {
-        font-size: 1.1rem;
-    }
-
-    @media (min-width: 1920px) {
-        font-size: 1.2rem;
-    }
 `;
 
 const ActionButtons = styled.div`
     display: flex;
     gap: 10px;
-
-    @media (max-width: 640px) {
-        gap: 8px;
-    }
-
-    @media (min-width: 1600px) {
-        gap: 12px;
-    }
-
-    @media (min-width: 1920px) {
-        gap: 14px;
-    }
 `;
 
 const ActionBtn = styled.button`
@@ -268,30 +119,6 @@ const ActionBtn = styled.button`
         background: #f9fafb;
         transform: scale(1.05);
     }
-
-    @media (max-width: 640px) {
-        padding: 0.45rem;
-        svg {
-            width: 14px;
-            height: 14px;
-        }
-    }
-
-    @media (min-width: 1600px) {
-        padding: 0.6rem;
-        svg {
-            width: 18px;
-            height: 18px;
-        }
-    }
-
-    @media (min-width: 1920px) {
-        padding: 0.75rem;
-        svg {
-            width: 20px;
-            height: 20px;
-        }
-    }
 `;
 
 export default function MyRides() {
@@ -311,8 +138,10 @@ export default function MyRides() {
     return (
         <Card>
             <Title>Manage Your Published Rides</Title>
+
             <RideList>
                 {rides.length === 0 && <p>No rides published yet.</p>}
+
                 {rides.map((ride) => {
                     const seatsText =
                         ride.seatsAvailable === 1
@@ -373,6 +202,10 @@ export default function MyRides() {
 
             {rideToDelete && (
                 <ConfirmModal
+                    title="Delete Ride?"
+                    message="Are you sure you want to permanently delete this ride?"
+                    confirmLabel="Delete"
+                    cancelLabel="Cancel"
                     onConfirm={() => {
                         deleteRide(rideToDelete);
                         setRideToDelete(null);

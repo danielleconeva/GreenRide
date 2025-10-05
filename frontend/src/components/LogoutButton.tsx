@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../store/store";
 import { logout } from "../store/authSlice";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import ConfirmModal from "./ConfirmModal";
 
 const LogoutBtn = styled.button`
     background: none;
@@ -10,8 +12,6 @@ const LogoutBtn = styled.button`
     padding: 0;
     font: inherit;
     cursor: pointer;
-
-    text-decoration: none;
     color: #374151;
     font-weight: 500;
     border-bottom: 2px solid transparent;
@@ -20,16 +20,12 @@ const LogoutBtn = styled.button`
     &:hover {
         color: #14b8a6;
     }
-
-    &:focus-visible {
-        outline: 2px solid #14b8a6;
-        outline-offset: 2px;
-    }
 `;
 
 export default function LogoutButton() {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -37,8 +33,21 @@ export default function LogoutButton() {
     };
 
     return (
-        <LogoutBtn type="button" onClick={handleLogout}>
-            Log Out
-        </LogoutBtn>
+        <>
+            <LogoutBtn type="button" onClick={() => setShowModal(true)}>
+                Log Out
+            </LogoutBtn>
+
+            {showModal && (
+                <ConfirmModal
+                    title="Log Out?"
+                    message="Are you sure you want to log out of your account?"
+                    confirmLabel="Log Out"
+                    cancelLabel="Cancel"
+                    onConfirm={handleLogout}
+                    onCancel={() => setShowModal(false)}
+                />
+            )}
+        </>
     );
 }
