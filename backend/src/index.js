@@ -16,7 +16,7 @@ app.use(cookieParser());
 
 const allowedOrigins = [
     "http://localhost:5173",
-    "https://greenride-frontend.vercel.app"
+    "https://green-ride-flax.vercel.app"
 ];
 
 app.use(cors({
