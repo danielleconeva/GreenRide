@@ -6,40 +6,46 @@ import type { RootState } from "../store/store";
 import EcoImpactFallback from "../components/EcoImpactFallback";
 
 const fadeUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
 const fadeInScale = keyframes`
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 `;
 
-const Page = styled.div`
+export const Page = styled.div`
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1.5rem;
     font-family: ${({ theme }) => theme.fonts.body};
     background: #fff;
     min-height: 100vh;
-
     opacity: 0;
     animation: ${fadeUp} 0.8s ease forwards;
+
+    @media (max-width: 900px) {
+        padding: 1.5rem 1rem;
+    }
+
+    @media (max-width: 640px) {
+        padding: 1rem 0.75rem;
+        min-height: auto;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 1400px;
+        padding: 3rem 2rem;
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 1600px;
+        padding: 4rem 3rem;
+    }
 `;
 
-const Header = styled.header`
+export const Header = styled.header`
     margin-bottom: 2.5rem;
     text-align: center;
 
@@ -59,25 +65,83 @@ const Header = styled.header`
         max-width: 650px;
         margin: 0 auto;
         line-height: 1.5;
-
         opacity: 0;
         animation: ${fadeUp} 0.8s ease forwards;
         animation-delay: 0.2s;
     }
+
+    @media (max-width: 640px) {
+        margin-bottom: 2rem;
+
+        h1 {
+            font-size: 1.6rem;
+        }
+
+        p {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+        h1 {
+            font-size: 2.2rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        h1 {
+            font-size: 2.4rem;
+        }
+
+        p {
+            font-size: 1.15rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        h1 {
+            font-size: 2.6rem;
+        }
+
+        p {
+            font-size: 1.25rem;
+        }
+    }
 `;
 
-const StatsGrid = styled.div`
+export const StatsGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.25rem;
     margin-bottom: 2.5rem;
-
     opacity: 0;
     animation: ${fadeInScale} 0.8s ease forwards;
     animation-delay: 0.3s;
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 1.75rem;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 2rem;
+    }
 `;
 
-const Card = styled.div`
+export const Card = styled.div`
     background: #fff;
     border-radius: 16px;
     border: 1px solid #e5e7eb;
@@ -101,7 +165,7 @@ const Card = styled.div`
         justify-content: center;
         margin: 0 auto 1rem;
         color: #14b8a6;
-        transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+        transition: all 0.3s ease;
     }
 
     &:hover .icon-wrapper {
@@ -115,26 +179,74 @@ const Card = styled.div`
         font-weight: 700;
         color: ${({ theme }) => theme.colors.primary};
         margin-bottom: 0.5rem;
-        transition: color 0.3s ease;
-    }
-
-    &:hover h2 {
-        color: #0f766e;
     }
 
     p {
         font-size: 0.875rem;
         color: #6b7280;
     }
+
+    @media (max-width: 640px) {
+        padding: 1.25rem;
+
+        .icon-wrapper {
+            width: 42px;
+            height: 42px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+        }
+
+        p {
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+        padding: 2rem;
+
+        .icon-wrapper {
+            width: 56px;
+            height: 56px;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+        }
+
+        p {
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        padding: 2rem;
+
+        h2 {
+            font-size: 2rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        padding: 2.25rem;
+
+        h2 {
+            font-size: 2.2rem;
+        }
+
+        p {
+            font-size: 1rem;
+        }
+    }
 `;
 
-const Section = styled.section`
+export const Section = styled.section`
     margin-top: 2.5rem;
     background: #fff;
     border-radius: 16px;
     padding: 1.5rem 3rem;
     border: 1px solid #e5e7eb;
-
     opacity: 0;
     animation: ${fadeUp} 0.8s ease forwards;
     animation-delay: 0.4s;
@@ -148,19 +260,55 @@ const Section = styled.section`
         align-items: center;
         gap: 0.5rem;
     }
+
+    @media (max-width: 900px) {
+        padding: 1.25rem 1.5rem;
+    }
+
+    @media (max-width: 640px) {
+        padding: 1.25rem;
+        h3 {
+            font-size: 1rem;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        padding: 2rem 4rem;
+
+        h3 {
+            font-size: 1.3rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        padding: 2.5rem 5rem;
+
+        h3 {
+            font-size: 1.45rem;
+        }
+    }
 `;
 
-const AchievementList = styled.div`
+export const AchievementList = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem;
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 3.5rem;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 4rem;
     }
 `;
 
-const AchievementCard = styled.div<{ unlocked: boolean }>`
+export const AchievementCard = styled.div<{ unlocked: boolean }>`
     padding: 1.25rem;
     padding-right: 4rem;
     border-radius: 12px;
@@ -191,7 +339,6 @@ const AchievementCard = styled.div<{ unlocked: boolean }>`
         align-items: center;
         justify-content: center;
         color: ${({ unlocked }) => (unlocked ? "#fff" : "#14b8a6")};
-        flex-shrink: 0;
     }
 
     strong {
@@ -214,9 +361,54 @@ const AchievementCard = styled.div<{ unlocked: boolean }>`
         font-weight: 500;
         font-size: 0.8rem;
     }
+
+    @media (max-width: 640px) {
+        padding: 1rem;
+        strong {
+            font-size: 0.95rem;
+        }
+        p {
+            font-size: 0.8rem;
+            margin-left: 2.5rem;
+        }
+        small {
+            font-size: 0.75rem;
+            margin-left: 2.5rem;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+        padding: 1.75rem;
+        strong {
+            font-size: 1.1rem;
+        }
+        p {
+            font-size: 0.95rem;
+        }
+        small {
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        padding: 1.75rem 4rem;
+        strong {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        padding: 2rem 5rem;
+        strong {
+            font-size: 1.2rem;
+        }
+        p {
+            font-size: 0.95rem;
+        }
+    }
 `;
 
-const ProgressBar = styled.div<{ progress: number }>`
+export const ProgressBar = styled.div<{ progress: number }>`
     margin-top: 0.75rem;
     margin-left: 3.25rem;
     height: 8px;
@@ -235,18 +427,30 @@ const ProgressBar = styled.div<{ progress: number }>`
     }
 `;
 
-const ImpactGrid = styled.div`
+export const ImpactGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 1.25rem;
     margin-top: 1.25rem;
-
     opacity: 0;
     animation: ${fadeInScale} 0.8s ease forwards;
     animation-delay: 0.5s;
+
+    @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 1.75rem;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 2rem;
+    }
 `;
 
-const ImpactCard = styled.div`
+export const ImpactCard = styled.div`
     background: #fff;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
@@ -284,22 +488,54 @@ const ImpactCard = styled.div`
         font-weight: 700;
         color: #14b8a6;
         margin-bottom: 0.5rem;
-        transition: color 0.3s ease;
-    }
-
-    &:hover h2 {
-        color: #0f766e;
     }
 
     p {
         font-size: 0.85rem;
         color: #6b7280;
     }
+
+    @media (max-width: 640px) {
+        padding: 1rem;
+        h2 {
+            font-size: 1.3rem;
+        }
+        p {
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+        padding: 1.75rem;
+        h2 {
+            font-size: 1.7rem;
+        }
+        p {
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        padding: 1.75rem;
+        h2 {
+            font-size: 1.8rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        padding: 2rem;
+        h2 {
+            font-size: 2rem;
+        }
+        p {
+            font-size: 1rem;
+        }
+    }
 `;
 
 export default function EcoImpactPage() {
     const user = useSelector((state: RootState) => state.auth.user);
-    const { data, isLoading, error } = useEcoStats();
+    const { data, isLoading, error } = useEcoStats(!!user);
 
     if (!user) {
         return <EcoImpactFallback />;

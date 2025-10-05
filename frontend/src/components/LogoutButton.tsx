@@ -1,4 +1,3 @@
-// LogoutButton.tsx
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../store/store";
 import { logout } from "../store/authSlice";

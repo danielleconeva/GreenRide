@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export type ProfileUser = {
     _id: string;
-    id?: string; // sometimes backend returns "id", sometimes "_id"
+    id?: string;
     username: string;
     email: string;
     phoneNumber?: string;

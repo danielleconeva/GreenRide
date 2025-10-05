@@ -44,10 +44,9 @@ const CTA = styled.button`
     &:hover {
         transform: translateY(-1px);
         box-shadow: 0 6px 18px rgba(34, 141, 145, 0.1);
-        background: #e6f8f8; /* very subtle */
+        background: #e6f8f8;
     }
 
-    /* click feedback */
     &:active {
         transform: translateY(0);
         box-shadow: 0 2px 10px rgba(34, 141, 145, 0.1);

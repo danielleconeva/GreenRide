@@ -1,4 +1,3 @@
-// src/utils/eco.ts
 export const EF_KG_PER_KM = 0.15;
 export const AVG_SPEED_KMH = 70;
 

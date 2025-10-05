@@ -15,19 +15,37 @@ import useDriver from "../hooks/useDriver";
 
 const Card = styled.div`
     display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
     gap: 24px;
-    align-items: center;
     padding: 24px;
     border: 1px solid #e5e7eb;
     border-radius: 16px;
     background: #fff;
-    text-decoration: none;
-    color: inherit;
     transition: box-shadow 0.15s ease, transform 0.06s ease;
 
     &:hover {
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
         transform: translateY(-1px);
+    }
+
+    @media (max-width: 900px) {
+        flex-direction: column;
+        align-items: stretch;
+        flex-wrap: nowrap;
+        gap: 16px;
+        padding: 16px;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 28px;
+        padding: 28px;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 32px;
+        padding: 32px;
+        border-radius: 20px;
     }
 `;
 
@@ -67,12 +85,48 @@ const DriverCol = styled.div`
         color: #6b7280;
         font-size: 0.9rem;
     }
+
+    @media (max-width: 900px) {
+        min-width: 0;
+        .avatar {
+            width: 44px;
+            height: 44px;
+            font-size: 0.95rem;
+        }
+        .name {
+            font-size: 0.95rem;
+        }
+        .rating {
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        min-width: 160px;
+        .avatar {
+            width: 56px;
+            height: 56px;
+            font-size: 1.05rem;
+        }
+        .name {
+            font-size: 1.05rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        min-width: 180px;
+        .name {
+            font-size: 1.1rem;
+        }
+    }
 `;
 
 const TimelineWrap = styled.div`
     flex: 1;
-    min-width: 400px;
+    min-width: 0;
+    width: 100%;
 `;
+
 const Timeline = styled.div`
     display: flex;
     align-items: center;
@@ -115,12 +169,17 @@ const Timeline = styled.div`
         margin: 0 16px;
         display: flex;
         align-items: center;
+        justify-content: center;
+        height: 32px;
     }
     .routeLine {
-        flex: 1;
+        width: 100%;
         height: 2px;
         background: #d1d5db;
-        position: relative;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
     }
     .routeLine::before,
     .routeLine::after {
@@ -142,7 +201,7 @@ const Timeline = styled.div`
 
     .duration {
         position: absolute;
-        top: -24px;
+        bottom: -22px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
@@ -155,6 +214,54 @@ const Timeline = styled.div`
         border-radius: 8px;
         white-space: nowrap;
     }
+
+    @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .timeLocation.departure,
+        .timeLocation.arrival {
+            align-items: flex-start;
+        }
+
+        .routeVisual {
+            order: 2;
+            margin: 12px 0;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .duration {
+            position: relative;
+            bottom: auto;
+            top: 6px;
+            left: 0;
+            transform: none;
+            align-self: center;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        gap: 28px;
+        .time {
+            font-size: 1.2rem;
+        }
+        .date {
+            font-size: 0.95rem;
+        }
+        .location {
+            font-size: 1rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        gap: 32px;
+        .time {
+            font-size: 1.25rem;
+        }
+    }
 `;
 
 const VehicleRow = styled.div`
@@ -164,10 +271,20 @@ const VehicleRow = styled.div`
     margin-top: 12px;
     color: #4b5563;
     font-size: 0.9rem;
+
     svg {
         width: 16px;
         height: 16px;
         color: #6b7280;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1rem;
+        gap: 10px;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1.05rem;
     }
 `;
 
@@ -176,7 +293,17 @@ const Amenities = styled.div`
     gap: 8px;
     margin-top: 8px;
     flex-wrap: wrap;
+
+    @media (max-width: 640px) {
+        gap: 6px;
+        margin-top: 6px;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 10px;
+    }
 `;
+
 const Chip = styled.span`
     display: inline-flex;
     align-items: center;
@@ -186,10 +313,21 @@ const Chip = styled.span`
     background: #f3f4f6;
     color: #4b5563;
     font-size: 0.8rem;
+
     svg {
         width: 12px;
         height: 12px;
         color: #6b7280;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 0.85rem;
+        padding: 5px 9px;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 0.9rem;
+        padding: 6px 10px;
     }
 `;
 
@@ -197,6 +335,14 @@ const Note = styled.div`
     color: #6b7280;
     font-style: italic;
     padding-top: 10px;
+
+    @media (max-width: 640px) {
+        padding-top: 8px;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1rem;
+    }
 `;
 
 const RightCol = styled.div`
@@ -205,13 +351,16 @@ const RightCol = styled.div`
     align-items: center;
     justify-content: center;
     gap: 16px;
-    min-width: 160px;
+    min-width: 0;
+    width: 100%;
 
     .price {
         color: #14b8a6;
         font-size: 1.5rem;
         font-weight: 700;
         line-height: 1;
+        text-align: center;
+
         .currency {
             font-size: 1.2rem;
         }
@@ -235,6 +384,7 @@ const RightCol = styled.div`
         font-weight: 600;
         font-size: 0.85rem;
         border: 1px solid #d1fae5;
+
         svg {
             width: 14px;
             height: 14px;
@@ -243,18 +393,66 @@ const RightCol = styled.div`
     }
 
     .cta {
-        width: 140px;
-        height: 40px;
-        border-radius: 20px;
+        width: 100%;
+        height: 44px;
+        border-radius: 12px;
         border: 0;
         background: #14b8a6;
         color: #fff;
         font-weight: 800;
         cursor: pointer;
-        font-size: 0.9rem;
+        font-size: 1rem;
         transition: background-color 0.15s ease;
         &:hover {
             background: #0f766e;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .cta {
+            width: 130px;
+            height: 36px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            align-self: center;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        min-width: 200px;
+        width: auto;
+        .price {
+            font-size: 1.7rem;
+            .currency {
+                font-size: 1.25rem;
+            }
+        }
+        .cta {
+            width: 160px;
+            height: 44px;
+            font-size: 0.95rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        min-width: 220px;
+        .price {
+            font-size: 1.85rem;
+            .currency {
+                font-size: 1.35rem;
+            }
+            small {
+                font-size: 0.85rem;
+            }
+        }
+        .seats {
+            font-size: 0.9rem;
+            padding: 8px 14px;
+        }
+        .cta {
+            width: 180px;
+            height: 48px;
+            font-size: 1rem;
         }
     }
 `;
@@ -263,40 +461,32 @@ type Props = { ride: Ride };
 
 export default function RideCard({ ride }: Props) {
     const navigate = useNavigate();
-
     const dateStr = ride.departureDate
         ? new Date(ride.departureDate).toLocaleDateString("en-GB", {
               day: "numeric",
               month: "short",
           })
         : "";
-
     const h = Math.floor(ride.durationMin / 60);
     const m = ride.durationMin % 60;
     const totalSeats = ride.seatsAvailable + (ride.passengers?.length ?? 0);
-
     const driverId = ride.driver?._id;
     const { data: driverPub } = useDriver(driverId);
-
     const displayName = driverPub?.username ?? ride.driver.username;
     const tripsCompleted = driverPub?.tripsCompleted;
-
     const driverInitials = displayName
         .split(" ")
         .map((s) => s[0])
         .join("")
         .slice(0, 2)
         .toUpperCase();
-
     const carFromHook = driverPub?.car;
     const carFromRide = (ride as any)?.driver?.car;
     const car = carFromHook ?? carFromRide ?? null;
-
     const vehicle = car
         ? `${car.make ?? ""} ${car.model ?? ""}`.trim() +
           (car.year ? ` (${car.year})` : "")
         : "";
-
     const handleBookClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -316,7 +506,6 @@ export default function RideCard({ ride }: Props) {
                     </div>
                 </div>
             </DriverCol>
-
             <TimelineWrap>
                 <Timeline>
                     <div className="timeLocation departure">
@@ -326,14 +515,12 @@ export default function RideCard({ ride }: Props) {
                         </div>
                         <div className="location">{ride.from}</div>
                     </div>
-
                     <div className="routeVisual">
                         <div className="routeLine" />
                         <div className="duration">
                             <Clock size={14} /> {h}h {m}m
                         </div>
                     </div>
-
                     <div className="timeLocation arrival">
                         <div className="time">{ride.arrivalTime}</div>
                         <div className="date">
@@ -342,12 +529,10 @@ export default function RideCard({ ride }: Props) {
                         <div className="location">{ride.to}</div>
                     </div>
                 </Timeline>
-
                 <VehicleRow>
                     <Car />
                     <span>{vehicle || "Vehicle"}</span>
                 </VehicleRow>
-
                 <Amenities>
                     {ride.amenities.airConditioning && (
                         <Chip>
@@ -370,10 +555,8 @@ export default function RideCard({ ride }: Props) {
                         </Chip>
                     )}
                 </Amenities>
-
                 {ride.notes && <Note>“{ride.notes}”</Note>}
             </TimelineWrap>
-
             <RightCol>
                 <div className="price">
                     <span className="currency">€ </span>

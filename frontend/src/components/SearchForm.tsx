@@ -12,18 +12,75 @@ const Card = styled.div`
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     margin-top: 0;
+
+    @media (max-width: 640px) {
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 900px) {
+        padding: 1.5rem;
+        border-radius: 14px;
+    }
+
+    @media (min-width: 1600px) {
+        padding: 2.5rem;
+        border-radius: 18px;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 3rem;
+        border-radius: 20px;
+    }
 `;
 
 const Form = styled.form`
     display: block;
-    width: 900px;
+    width: 100%;
+    max-width: 900px;
     margin: 0 auto;
+
+    @media (max-width: 640px) {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    @media (max-width: 900px) {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 1000px;
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 1100px;
+    }
 `;
 
 const Group = styled.div`
     display: block;
     margin-bottom: 1.5rem;
     flex: 1 1 300px;
+
+    @media (max-width: 640px) {
+        margin-bottom: 1rem;
+        flex: 1 1 100%;
+    }
+
+    @media (max-width: 900px) {
+        margin-bottom: 1.25rem;
+    }
+
+    @media (min-width: 1600px) {
+        margin-bottom: 1.75rem;
+    }
+
+    @media (min-width: 1920px) {
+        margin-bottom: 2rem;
+    }
 `;
 
 const Row = styled.div`
@@ -34,6 +91,24 @@ const Row = styled.div`
     > ${Group} {
         flex: 1;
     }
+
+    @media (max-width: 640px) {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    @media (max-width: 900px) {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 2.5rem;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 3rem;
+    }
 `;
 
 const Label = styled.label`
@@ -42,6 +117,21 @@ const Label = styled.label`
     font-size: 0.9rem;
     font-weight: 500;
     color: #374151;
+
+    @media (max-width: 640px) {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
 `;
 
 const FieldWrap = styled.div`
@@ -76,11 +166,30 @@ const Input = styled.input`
     &[type="date"] {
         padding-left: 40px;
     }
+
     &:-webkit-autofill {
         box-shadow: 0 0 0px 1000px #fff inset !important;
         -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
         -webkit-text-fill-color: #4e4f54 !important;
         transition: background-color 5000s ease-in-out 0s;
+    }
+
+    @media (max-width: 640px) {
+        height: 42px;
+        font-size: 0.9rem;
+        padding: 0 10px 0 38px;
+    }
+
+    @media (min-width: 1600px) {
+        height: 48px;
+        font-size: 1rem;
+        padding: 0 14px 0 44px;
+    }
+
+    @media (min-width: 1920px) {
+        height: 52px;
+        font-size: 1.05rem;
+        padding: 0 16px 0 48px;
     }
 `;
 
@@ -98,6 +207,19 @@ const Suggestions = styled.ul`
     z-index: 10;
     list-style: none;
     padding: 0;
+
+    @media (max-width: 640px) {
+        max-height: 180px;
+        font-size: 0.9rem;
+    }
+
+    @media (min-width: 1600px) {
+        max-height: 220px;
+    }
+
+    @media (min-width: 1920px) {
+        max-height: 250px;
+    }
 `;
 
 const SuggestionItem = styled.li`
@@ -107,6 +229,21 @@ const SuggestionItem = styled.li`
 
     &:hover {
         background: #f3f4f6;
+    }
+
+    @media (max-width: 640px) {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+
+    @media (min-width: 1600px) {
+        padding: 10px 14px;
+        font-size: 0.95rem;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 12px 16px;
+        font-size: 1rem;
     }
 `;
 
@@ -135,6 +272,39 @@ const SelectWrap = styled.div`
         border-top: 6px solid #6b7280;
         pointer-events: none;
     }
+
+    @media (max-width: 640px) {
+        svg {
+            left: 10px;
+        }
+
+        &::after {
+            right: 10px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid #6b7280;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        svg {
+            left: 14px;
+        }
+
+        &::after {
+            right: 14px;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        svg {
+            left: 16px;
+        }
+
+        &::after {
+            right: 16px;
+        }
+    }
 `;
 
 const Select = styled.select`
@@ -157,7 +327,26 @@ const Select = styled.select`
         border-color: #14b8a6;
         box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
     }
+
+    @media (max-width: 640px) {
+        height: 42px;
+        font-size: 0.9rem;
+        padding: 0 28px 0 38px;
+    }
+
+    @media (min-width: 1600px) {
+        height: 48px;
+        font-size: 1rem;
+        padding: 0 34px 0 44px;
+    }
+
+    @media (min-width: 1920px) {
+        height: 52px;
+        font-size: 1.05rem;
+        padding: 0 38px 0 48px;
+    }
 `;
+
 const Submit = styled.button`
     display: flex;
     align-items: center;
@@ -193,9 +382,38 @@ const Submit = styled.button`
     }
 
     &:disabled {
-        cursor: not-allowed; /* pointer with disabled symbol */
+        cursor: not-allowed;
         transform: none;
         box-shadow: none;
+    }
+
+    @media (max-width: 640px) {
+        width: 100%;
+        height: 44px;
+        font-size: 0.95rem;
+        gap: 8px;
+        margin: 12px auto 0;
+    }
+
+    @media (max-width: 900px) {
+        width: 70%;
+        height: 46px;
+    }
+
+    @media (min-width: 1600px) {
+        width: 45%;
+        height: 52px;
+        font-size: 1.05rem;
+        gap: 12px;
+        margin: 24px auto 0;
+    }
+
+    @media (min-width: 1920px) {
+        width: 40%;
+        height: 56px;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        margin: 28px auto 0;
     }
 `;
 

@@ -14,11 +14,20 @@ const FormWrapper = styled.form`
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.09);
+    margin: 0 auto;
 
     h3 {
         color: ${({ theme }) => theme.colors.foreground};
         font-size: 1.8rem;
         margin: 0 auto;
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+        font-size: 0.9rem;
+        color: ${({ theme }) => theme.colors.mutedForeground};
+        margin-bottom: 0.5rem;
     }
 
     label {
@@ -26,6 +35,7 @@ const FormWrapper = styled.form`
         font-weight: 500;
         margin: 0.5rem 0;
     }
+
     input {
         background: #f5f5f5;
         border: 1px solid #ddd;
@@ -39,7 +49,7 @@ const FormWrapper = styled.form`
         cursor: pointer;
         background: ${({ theme }) => theme.colors.gradientHero};
         color: ${({ theme }) => theme.colors.primaryForeground};
-        transition: opacity 0.2s ease;
+        transition: all 0.2s ease;
         width: 40%;
         margin: 0.9rem auto 0;
 
@@ -47,15 +57,80 @@ const FormWrapper = styled.form`
             transform: translateY(-1px) scale(1.02);
             box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
         }
+
         &:disabled {
             background: #ccc;
             cursor: not-allowed;
         }
     }
 
-    p {
-        text-align: center;
-        font-size: 0.9rem;
+    @media (max-width: 1024px) {
+        max-width: 360px;
+        padding: 1.8rem;
+        button {
+            width: 50%;
+        }
+    }
+
+    @media (max-width: 640px) {
+        max-width: 95%;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+
+        h3 {
+            font-size: 1.6rem;
+        }
+
+        p {
+            font-size: 0.85rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+        }
+
+        input {
+            font-size: 0.95rem;
+            padding: 0.7rem 2.25rem;
+        }
+
+        button {
+            width: 60%;
+            font-size: 0.95rem;
+            padding: 0.7rem;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 450px;
+        padding: 2.5rem;
+        h3 {
+            font-size: 2rem;
+        }
+        button {
+            width: 38%;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 500px;
+        padding: 3rem;
+        h3 {
+            font-size: 2.2rem;
+        }
+        p {
+            font-size: 1rem;
+        }
+        input {
+            font-size: 1.05rem;
+            padding: 0.9rem 2.5rem;
+        }
+        button {
+            width: 35%;
+            font-size: 1rem;
+            padding: 0.85rem;
+        }
     }
 `;
 
@@ -86,12 +161,29 @@ const InputGroup = styled.div`
         color: #6b7280;
         z-index: 1;
     }
+
     .left-icon {
         left: 0.75rem;
     }
+
     .right-icon {
         right: 0.75rem;
         cursor: pointer;
+    }
+
+    @media (max-width: 640px) {
+        input {
+            padding: 0.65rem 2rem;
+            font-size: 0.95rem;
+        }
+
+        .left-icon {
+            left: 0.6rem;
+        }
+
+        .right-icon {
+            right: 0.6rem;
+        }
     }
 `;
 

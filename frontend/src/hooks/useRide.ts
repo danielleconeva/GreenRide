@@ -41,7 +41,7 @@ export default function useRide(rideId?: string) {
     const deleteMutation = useMutation({
         mutationFn: (id: string) => deleteRide(id),
         onSuccess: () => {
-            // Invalidate related queries after deletion
+
             queryClient.invalidateQueries({ queryKey: ["myRides"] });
 
         },
@@ -51,7 +51,7 @@ export default function useRide(rideId?: string) {
         mutationFn: (vars: { id: string; data: Partial<Ride> }) =>
             updateRide(vars.id, vars.data),
         onSuccess: (updatedRide) => {
-            // Replace cached ride data with the new version
+
             queryClient.setQueryData(["ride", updatedRide._id], updatedRide);
             queryClient.invalidateQueries({ queryKey: ["myRides"] });
         },

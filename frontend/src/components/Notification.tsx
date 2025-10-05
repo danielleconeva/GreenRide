@@ -40,6 +40,20 @@ const Popup = styled.div<{ $type: "success" | "error"; $closing: boolean }>`
         transform: translateY(-2px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
     }
+
+    @media (max-width: 640px) {
+        top: 4rem;
+        right: 1rem;
+        left: 1rem;
+        font-size: 0.95rem;
+        text-align: center;
+        padding: 1rem 1.25rem;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1.1rem;
+        padding: 1.75rem 2rem;
+    }
 `;
 
 export default function Notification() {

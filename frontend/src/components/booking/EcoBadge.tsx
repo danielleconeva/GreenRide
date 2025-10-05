@@ -1,4 +1,3 @@
-// src/components/booking/EcoBadge.tsx
 import styled from "styled-components";
 import { Leaf } from "lucide-react";
 import type { Ride } from "../../types/ride";

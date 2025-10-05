@@ -17,8 +17,26 @@ const Page = styled.div`
     margin: 0 auto;
     padding: 3rem 1.5rem;
     font-family: ${({ theme }) => theme.fonts.body};
-    min-height: 100vh;
+    min-height: auto;
     text-align: center;
+
+    @media (max-width: 900px) {
+        padding: 2.5rem 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+        padding: 2rem 1rem;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 1400px;
+        padding: 5rem 2.5rem;
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 1600px;
+        padding: 6rem 3.5rem;
+    }
 `;
 
 const Title = styled.h1`
@@ -33,6 +51,15 @@ const Title = styled.h1`
     span {
         color: #14b8a6;
     }
+
+    @media (min-width: 1600px) {
+        font-size: 3.2rem;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 3.8rem;
+        margin-bottom: 2.5rem;
+    }
 `;
 
 const Subtitle = styled.p`
@@ -44,17 +71,43 @@ const Subtitle = styled.p`
     opacity: 0;
     animation: ${fadeUp} 0.7s ease forwards;
     animation-delay: 0.3s;
+
+    @media (min-width: 1600px) {
+        font-size: 1.25rem;
+        max-width: 850px;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1.35rem;
+        max-width: 950px;
+    }
 `;
 
 const ButtonRow = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
     margin: 2rem auto 3rem;
     opacity: 0;
     animation: ${fadeUp} 0.7s ease forwards;
     animation-delay: 0.4s;
+    width: 100%;
+    text-align: center;
+
+    @media (min-width: 1600px) {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 1.5rem;
+        margin: 3rem auto 4rem;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 2rem;
+        margin-bottom: 5rem;
+    }
 `;
 
 const PrimaryBtn = styled.button`
@@ -74,6 +127,18 @@ const PrimaryBtn = styled.button`
         transform: translateY(-2px);
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
     }
+
+    @media (min-width: 1600px) {
+        padding: 1.2rem 2.5rem;
+        font-size: 1.2rem;
+        min-width: 230px;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 1.4rem 3rem;
+        font-size: 1.3rem;
+        border-radius: 18px;
+    }
 `;
 
 const SecondaryBtn = styled.button`
@@ -92,6 +157,18 @@ const SecondaryBtn = styled.button`
         transform: translateY(-2px);
         box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
     }
+
+    @media (min-width: 1600px) {
+        padding: 1.1rem 2.4rem;
+        font-size: 1.15rem;
+        min-width: 230px;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 1.3rem 2.8rem;
+        font-size: 1.25rem;
+        border-radius: 18px;
+    }
 `;
 
 const FeaturesGrid = styled.div`
@@ -102,6 +179,16 @@ const FeaturesGrid = styled.div`
     opacity: 0;
     animation: ${fadeScale} 0.7s ease forwards;
     animation-delay: 0.5s;
+
+    @media (min-width: 1600px) {
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 2.5rem;
+        margin-top: 4rem;
+    }
 `;
 
 const FeatureCard = styled.div`
@@ -141,9 +228,43 @@ const FeatureCard = styled.div`
         color: #6b7280;
         line-height: 1.4;
     }
+
+    @media (min-width: 1600px) {
+        padding: 2.5rem 2rem;
+
+        .icon {
+            width: 64px;
+            height: 64px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+        }
+
+        p {
+            font-size: 1.05rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        padding: 3rem 2.5rem;
+
+        .icon {
+            width: 72px;
+            height: 72px;
+        }
+
+        h3 {
+            font-size: 1.6rem;
+        }
+
+        p {
+            font-size: 1.15rem;
+            line-height: 1.5;
+        }
+    }
 `;
 
-/* 🔹 Bottom "How Publishing Works" Section */
 const TrackSection = styled.section`
     max-width: 900px;
     margin: 4rem auto 0;
@@ -166,12 +287,42 @@ const TrackSection = styled.section`
         color: #6b7280;
         margin-bottom: 2rem;
     }
+
+    @media (min-width: 1600px) {
+        max-width: 1100px;
+        padding: 3rem;
+        h2 {
+            font-size: 1.9rem;
+        }
+        > p {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 1300px;
+        padding: 3.5rem;
+        h2 {
+            font-size: 2.1rem;
+        }
+        > p {
+            font-size: 1.2rem;
+        }
+    }
 `;
 
 const TrackGrid = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
+
+    @media (min-width: 1600px) {
+        gap: 2rem;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 2.5rem;
+    }
 `;
 
 const TrackItem = styled.div`
@@ -209,6 +360,35 @@ const TrackItem = styled.div`
         font-size: 0.9rem;
         margin: 0;
         color: #6b7280;
+    }
+
+    @media (min-width: 1600px) {
+        .icon {
+            width: 52px;
+            height: 52px;
+            font-size: 1.1rem;
+        }
+        h4 {
+            font-size: 1.2rem;
+        }
+        p {
+            font-size: 1rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        .icon {
+            width: 60px;
+            height: 60px;
+            font-size: 1.25rem;
+        }
+        h4 {
+            font-size: 1.3rem;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
     }
 `;
 

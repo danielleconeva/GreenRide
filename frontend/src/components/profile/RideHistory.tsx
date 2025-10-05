@@ -12,6 +12,24 @@ const Card = styled.section`
     padding: 2rem;
     padding-top: 1rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    @media (max-width: 900px) {
+        padding: 1.5rem;
+    }
+
+    @media (max-width: 640px) {
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    @media (min-width: 1600px) {
+        padding: 2.5rem;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 3rem;
+    }
 `;
 
 const Title = styled.h3`
@@ -19,12 +37,40 @@ const Title = styled.h3`
     font-weight: 600;
     color: #353333;
     margin-bottom: 1.5rem;
+    transition: font-size 0.3s ease;
+
+    @media (max-width: 900px) {
+        font-size: 1.35rem;
+        margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1.75rem;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1.9rem;
+    }
 `;
 
 const RideList = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
+
+    @media (min-width: 1600px) {
+        gap: 20px;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 24px;
+    }
 `;
 
 const RideItem = styled.div`
@@ -37,6 +83,24 @@ const RideItem = styled.div`
     align-items: flex-start;
     margin: 0.5rem;
     padding-bottom: 1.5rem;
+    flex-wrap: wrap;
+    transition: all 0.25s ease;
+
+    @media (max-width: 900px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        margin: 0.5rem 0;
+        padding: 1.25rem;
+    }
+
+    @media (min-width: 1600px) {
+        padding: 1.75rem;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 2rem;
+    }
 `;
 
 const RideInfo = styled.div`
@@ -46,12 +110,25 @@ const RideInfo = styled.div`
     font-size: 0.9rem;
     font-weight: 500;
     color: #50535a;
+
+    @media (max-width: 640px) {
+        font-size: 0.85rem;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 0.95rem;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1rem;
+    }
 `;
 
 const Row = styled.div`
     display: flex;
     align-items: center;
     gap: 7px;
+    flex-wrap: wrap;
 
     .active {
         margin: 0.6rem 0;
@@ -68,6 +145,24 @@ const Row = styled.div`
         align-items: center;
         gap: 8px;
     }
+
+    @media (max-width: 640px) {
+        .map {
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        .map {
+            font-size: 1.05rem;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        .map {
+            font-size: 1.1rem;
+        }
+    }
 `;
 
 const RoleBadge = styled.span<{ type: "driver" | "passenger" }>`
@@ -78,6 +173,22 @@ const RoleBadge = styled.span<{ type: "driver" | "passenger" }>`
     padding: 0.3rem 0.8rem;
     border-radius: 12px;
     margin-right: 0.75rem;
+    transition: all 0.3s ease;
+
+    @media (max-width: 640px) {
+        font-size: 0.8rem;
+        padding: 0.25rem 0.6rem;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1rem;
+        padding: 0.35rem 1rem;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1.1rem;
+        padding: 0.45rem 1.1rem;
+    }
 `;
 
 const RideActions = styled.div`
@@ -86,6 +197,20 @@ const RideActions = styled.div`
     align-items: flex-end;
     gap: 12px;
     font-size: 0.9rem;
+
+    @media (max-width: 900px) {
+        width: 100%;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 14px;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 16px;
+    }
 `;
 
 const Price = styled.span<{ positive?: boolean }>`
@@ -93,6 +218,24 @@ const Price = styled.span<{ positive?: boolean }>`
     color: ${({ positive }) => (positive ? "#39a798" : "#d76c6c")};
     font-size: 1.1rem;
     margin: 4rem 0 0.5rem 0;
+    transition: font-size 0.3s ease;
+
+    @media (max-width: 900px) {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    @media (max-width: 640px) {
+        font-size: 0.95rem;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1.25rem;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1.35rem;
+    }
 `;
 
 export default function RideHistory() {

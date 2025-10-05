@@ -9,6 +9,26 @@ const Form = styled.form`
     margin: 2rem auto 4rem;
     padding: 0 1rem;
     font-family: ${({ theme }) => theme.fonts.body};
+
+    @media (max-width: 900px) {
+        margin: 1.5rem auto 3rem;
+        padding: 0 0.75rem;
+    }
+
+    @media (max-width: 640px) {
+        margin: 1rem auto 2rem;
+        padding: 0 0.5rem;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 1100px;
+        margin: 3rem auto 5rem;
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 1200px;
+        margin: 4rem auto 6rem;
+    }
 `;
 
 const FieldsetCard = styled.fieldset`
@@ -18,16 +38,28 @@ const FieldsetCard = styled.fieldset`
     padding-bottom: 1rem;
     margin-bottom: 2rem;
     background: #fff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 
     &:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-            0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
+    }
+
+    @media (max-width: 640px) {
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    @media (min-width: 1600px) {
+        padding: 2.5rem;
+        border-radius: 16px;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 3rem;
     }
 `;
-
 const Legend = styled.legend`
     font-size: 1.5rem;
     font-weight: 600;
@@ -142,9 +174,7 @@ const Submit = styled.button`
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    margin: 18px auto 0;
-    will-change: transform, box-shadow;
-    transform: translateZ(0);
+    margin: 24px auto 0;
 
     &:hover {
         background: #22a499;
@@ -166,6 +196,32 @@ const Submit = styled.button`
         cursor: not-allowed;
         transform: none;
         box-shadow: none;
+    }
+
+    @media (max-width: 900px) {
+        width: 50%;
+        height: 50px;
+        font-size: 1.05rem;
+    }
+
+    @media (max-width: 640px) {
+        width: 70%;
+        height: 52px;
+        font-size: 1rem;
+        border-radius: 10px;
+        margin-top: 1.25rem;
+    }
+
+    @media (min-width: 1600px) {
+        width: 28%;
+        height: 54px;
+        font-size: 1.05rem;
+    }
+
+    @media (min-width: 1920px) {
+        width: 26%;
+        height: 58px;
+        font-size: 1.1rem;
     }
 `;
 

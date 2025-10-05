@@ -30,46 +30,133 @@ const fadeScale = keyframes`
   }
 `;
 
-const Wrap = styled.div`
+export const Wrap = styled.div`
     font-family: ${({ theme }) => theme.fonts.body};
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 1.5rem;
     min-height: 100vh;
+    overflow-x: hidden;
 
     opacity: 0;
     animation: ${fadeSlideUp} 0.8s ease forwards;
+
+    @media (max-width: 900px) {
+        max-width: 100%;
+        padding: 0 0.75rem;
+    }
+
+    @media (max-width: 640px) {
+        padding: 0 0.5rem;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 1400px;
+        padding: 0 2rem;
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 1600px;
+        padding: 0 3rem;
+    }
 `;
 
-const Container = styled.div`
+export const Container = styled.div`
     width: 70%;
     margin: 0 auto;
+
+    @media (max-width: 1200px) {
+        width: 80%;
+    }
+
+    @media (max-width: 900px) {
+        width: 95%;
+    }
+
+    @media (max-width: 640px) {
+        width: 100%;
+    }
+
+    @media (min-width: 1600px) {
+        width: 75%;
+    }
+
+    @media (min-width: 1920px) {
+        width: 70%;
+    }
 `;
 
-const TabsWrapper = styled(Container)`
+export const TabsWrapper = styled.div`
     margin-top: 40px;
     display: flex;
     justify-content: center;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
 
     opacity: 0;
     animation: ${fadeScale} 0.5s ease forwards;
     animation-delay: 0.3s;
+
+    @media (max-width: 1200px) {
+        width: 80%;
+    }
+
+    @media (max-width: 900px) {
+        margin-top: 30px;
+        width: 95%;
+    }
+
+    @media (max-width: 640px) {
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    @media (min-width: 1600px) {
+        margin-top: 50px;
+        width: 75%;
+    }
+
+    @media (min-width: 1920px) {
+        margin-top: 60px;
+        width: 70%;
+    }
 `;
 
-const Tabs = styled.div`
+export const Tabs = styled.div`
     display: inline-flex;
     align-items: center;
-    padding: 2px;
+    justify-content: center;
+    flex-wrap: nowrap;
+    padding: 3px;
     background: #fbfcfd;
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    @media (max-width: 900px) {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(2, auto);
+        gap: 6px;
+        width: 100%;
+        max-width: 100%;
+        padding: 6px;
+        box-sizing: border-box;
+    }
+
+    @media (max-width: 640px) {
+        gap: 5px;
+        padding: 5px;
+    }
 `;
 
-const Tab = styled.button<{ active?: boolean }>`
+export const Tab = styled.button<{ active?: boolean }>`
     display: inline-flex;
     align-items: center;
-    gap: 1rem;
-    padding: 0.4rem 3rem;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.5rem 2.5rem;
     font-size: 0.95rem;
     font-weight: 500;
     color: ${({ active }) => (active ? "#111827" : "#6b7280")};
@@ -77,34 +164,112 @@ const Tab = styled.button<{ active?: boolean }>`
     border-radius: 10px;
     background: ${({ active }) => (active ? "#ffffff" : "transparent")};
     cursor: pointer;
-    transition: all 0.45s ease;
-    white-space: nowrap;
+    transition: all 0.3s ease;
     box-shadow: ${({ active }) =>
         active ? "0 2px 6px rgba(0,0,0,0.08)" : "none"};
+    white-space: nowrap;
+    box-sizing: border-box;
 
     svg {
         width: 16px;
         height: 16px;
+        flex-shrink: 0;
+    }
+
+    &:hover {
+        color: #111827;
+    }
+
+    @media (max-width: 900px) {
+        padding: 0.6rem 0.4rem;
+        font-size: 0.8rem;
+        gap: 0.4rem;
+        width: 100%;
+        min-width: 0;
+
+        svg {
+            width: 15px;
+            height: 15px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        padding: 0.55rem 0.3rem;
+        font-size: 0.72rem;
+        gap: 0.3rem;
+
+        svg {
+            width: 13px;
+            height: 13px;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        padding: 0.6rem 3rem;
+        font-size: 1rem;
+
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        padding: 0.7rem 3.5rem;
+        font-size: 1.05rem;
+
+        svg {
+            width: 20px;
+            height: 20px;
+        }
     }
 `;
 
-const Section = styled(Container)`
-    background: white;
+export const Section = styled(Container)`
+    background: #ffffff;
     padding: 32px;
     margin-top: 7px;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow-x: hidden;
 
     opacity: 0;
     animation: ${fadeSlideUp} 0.6s ease forwards;
     animation-delay: 0.3s;
+
+    @media (max-width: 900px) {
+        padding: 20px;
+        margin-bottom: 1rem;
+        width: 95%;
+    }
+
+    @media (max-width: 640px) {
+        padding: 16px 12px;
+        margin-bottom: 0.8rem;
+        width: 100%;
+    }
+
+    @media (min-width: 1600px) {
+        padding: 40px;
+        margin-bottom: 2rem;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 48px;
+        margin-bottom: 2.5rem;
+    }
 `;
 
-const TabContent = styled.div`
+export const TabContent = styled.div`
     opacity: 0;
     transform: translateY(10px);
     animation: ${fadeSlideUp} 1.1s ease forwards;
+
+    @media (max-width: 640px) {
+        transform: none;
+    }
 `;
 
 export default function ProfilePage() {

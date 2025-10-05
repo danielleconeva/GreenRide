@@ -30,6 +30,18 @@ const Spinner = styled.div`
             transform: rotate(360deg);
         }
     }
+
+    @media (max-width: 640px) {
+        width: 36px;
+        height: 36px;
+        border-width: 3px;
+    }
+
+    @media (min-width: 1600px) {
+        width: 56px;
+        height: 56px;
+        border-width: 5px;
+    }
 `;
 
 export default function GlobalLoader() {

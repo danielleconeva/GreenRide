@@ -29,10 +29,12 @@ async function fetchEcoStats(): Promise<EcoResponse> {
     return res.json();
 }
 
-export function useEcoStats() {
+export function useEcoStats(enabled: boolean = true) {
     return useQuery<EcoResponse>({
         queryKey: ["ecoStats"],
         queryFn: fetchEcoStats,
         staleTime: 1000 * 60 * 2,
+        enabled,
     });
 }
+

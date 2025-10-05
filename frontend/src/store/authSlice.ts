@@ -5,7 +5,7 @@ interface AuthState { user: User | null; loading: boolean; error: string | null;
 
 const initialState: AuthState = { user: null, loading: false, error: null };
 
-/* 1) REGISTER — send "confirm-password" and return data.user */
+
 export const register = createAsyncThunk<
     User,
     { email: string; password: string; confirmPassword: string; username: string },
@@ -20,18 +20,18 @@ export const register = createAsyncThunk<
                 username: u.username,
                 email: u.email,
                 password: u.password,
-                ["confirm-password"]: u.confirmPassword, // IMPORTANT
+                ["confirm-password"]: u.confirmPassword,
             }),
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) return rejectWithValue(data?.error || data?.message || "Registration failed");
-        return data.user as User; // <-- only the user object
+        return data.user as User;
     } catch {
         return rejectWithValue("Network error");
     }
 });
 
-/* 2) LOGIN — return data.user */
+
 export const login = createAsyncThunk<
     User,
     { email: string; password: string },
@@ -52,7 +52,7 @@ export const login = createAsyncThunk<
     }
 });
 
-/* 3) CHECK (hydrate) — call on app load; your API: /api/users/profile */
+
 export const checkAuth = createAsyncThunk<
     User | null,
     void,

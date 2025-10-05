@@ -281,7 +281,6 @@ export default function BookingSummary(props: Props) {
         co2SavedKg,
     } = props;
 
-    // fetch driver's public profile (phone number, etc.)
     const { data: driverPublic } = useDriver(driver?._id);
     const phone = driverPublic?.phoneNumber;
 

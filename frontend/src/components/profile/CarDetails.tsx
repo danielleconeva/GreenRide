@@ -13,6 +13,24 @@ const Card = styled.section`
     padding: 2rem;
     padding-top: 1rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    @media (max-width: 900px) {
+        padding: 1.5rem;
+    }
+
+    @media (max-width: 640px) {
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    @media (min-width: 1600px) {
+        padding: 2.5rem;
+    }
+
+    @media (min-width: 1920px) {
+        padding: 3rem;
+    }
 `;
 
 const Title = styled.h3`
@@ -20,6 +38,26 @@ const Title = styled.h3`
     font-weight: 600;
     color: #353333;
     margin-bottom: 1.5rem;
+    transition: font-size 0.3s ease;
+
+    @media (max-width: 900px) {
+        font-size: 1.35rem;
+        margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1.75rem;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1.9rem;
+    }
 `;
 
 const Form = styled.form`
@@ -28,6 +66,15 @@ const Form = styled.form`
 
     @media (min-width: 640px) {
         grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 28px;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 32px;
     }
 `;
 
@@ -41,6 +88,20 @@ const Label = styled.label`
     font-weight: 600;
     margin-bottom: 1rem;
     color: #2b2d2f;
+    transition: font-size 0.3s ease;
+
+    @media (max-width: 640px) {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 0.95rem;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1rem;
+    }
 `;
 
 const Input = styled.input`
@@ -53,6 +114,22 @@ const Input = styled.input`
     background: ${({ disabled }) => (disabled ? "#f9fafb" : "#fff")};
     color: ${({ disabled }) => (disabled ? "#9ca3af" : "#111827")};
     cursor: ${({ disabled }) => (disabled ? "not-allowed" : "text")};
+    transition: all 0.2s ease;
+
+    @media (max-width: 640px) {
+        font-size: 0.8rem;
+        padding: 7px 10px;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 0.95rem;
+        padding: 10px 14px;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1rem;
+        padding: 12px 16px;
+    }
 `;
 
 type Props = {
@@ -62,7 +139,6 @@ type Props = {
 export default function CarDetails({ isEditing }: Props) {
     const { data: profileUser } = useProfile();
     const dispatch = useDispatch<AppDispatch>();
-
     const updateProfile = useUpdateProfile();
 
     if (!profileUser) return null;

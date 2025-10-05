@@ -26,13 +26,6 @@ const fadeScale = keyframes`
   to { opacity: 1; transform: scale(1); }
 `;
 
-const TopBar = styled.div`
-    max-width: 1100px;
-    margin: 0 auto 12px;
-    opacity: 0;
-    animation: ${fadeSlideUp} 0.6s ease forwards;
-`;
-
 const BackLink = styled.button`
     display: inline-flex;
     align-items: center;
@@ -58,6 +51,30 @@ const BackLink = styled.button`
         outline: none;
         box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
     }
+    @media (max-width: 1600px) {
+        margin-left: 1.5rem;
+    }
+`;
+const TopBar = styled.div`
+    max-width: 1100px;
+    margin: 0 auto 12px;
+    opacity: 0;
+    animation: ${fadeSlideUp} 0.6s ease forwards;
+
+    @media (max-width: 640px) {
+        padding: 0 1rem;
+        margin-bottom: 8px;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 1300px;
+        margin-bottom: 20px;
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 1500px;
+        margin-bottom: 24px;
+    }
 `;
 
 const Page = styled.div`
@@ -68,19 +85,48 @@ const Page = styled.div`
     grid-template-columns: 1fr 320px;
     gap: 24px;
     font-family: ${({ theme }) => theme.fonts.body};
-
     opacity: 0;
     animation: ${fadeSlideUp} 0.7s ease forwards;
     animation-delay: 0.15s;
 
     @media (max-width: 1024px) {
         grid-template-columns: 1fr;
+        padding: 0 1rem 60px;
+        gap: 20px;
+    }
+
+    @media (max-width: 640px) {
+        padding: 0 0.75rem 48px;
+        gap: 16px;
+    }
+
+    @media (min-width: 1600px) {
+        max-width: 1300px;
+        gap: 32px;
+    }
+
+    @media (min-width: 1920px) {
+        max-width: 1500px;
+        gap: 40px;
+        padding-bottom: 100px;
     }
 `;
 
 const Column = styled.div`
     display: grid;
     gap: 16px;
+
+    @media (max-width: 640px) {
+        gap: 14px;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 24px;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 28px;
+    }
 
     > * {
         opacity: 0;
@@ -108,6 +154,25 @@ const Aside = styled.div`
     gap: 16px;
     height: fit-content;
 
+    @media (max-width: 900px) {
+        position: static;
+        top: auto;
+        gap: 14px;
+        margin-top: 16px;
+    }
+
+    @media (max-width: 640px) {
+        padding: 0 0.5rem;
+    }
+
+    @media (min-width: 1600px) {
+        gap: 20px;
+    }
+
+    @media (min-width: 1920px) {
+        gap: 24px;
+    }
+
     > * {
         opacity: 0;
         animation: ${fadeScale} 0.6s ease forwards;
@@ -130,6 +195,9 @@ const Aside = styled.div`
 const PrimaryBtn = styled.button`
     font-family: ${({ theme }) => theme.fonts.body};
     height: 44px;
+    width: 180px;
+    margin: 0 auto;
+    display: block;
     border-radius: 10px;
     border: 0;
     font-weight: 600;
@@ -138,32 +206,57 @@ const PrimaryBtn = styled.button`
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
     &:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         filter: brightness(1.02);
     }
+
     &:active {
         transform: translateY(0);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
         filter: brightness(0.98);
         transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     &:focus-visible {
         outline: none;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05),
             0 0 0 3px rgba(16, 185, 129, 0.2);
     }
+
     &:disabled {
         opacity: 0.6;
         cursor: not-allowed;
         transform: none;
+    }
+
+    @media (max-width: 900px) {
+        width: 150px;
+        height: 38px;
+        font-size: 0.88rem;
+    }
+
+    @media (min-width: 1600px) {
+        width: 200px;
+        height: 48px;
+        font-size: 1.05rem;
+    }
+
+    @media (min-width: 1920px) {
+        width: 220px;
+        height: 52px;
+        font-size: 1.1rem;
     }
 `;
 
 const GhostBtn = styled.button`
     font-family: ${({ theme }) => theme.fonts.body};
     height: 44px;
+    width: 180px;
+    margin: 0 auto;
+    display: block;
     border-radius: 10px;
     border: 1px solid #ebecef;
     background: #fff;
@@ -172,12 +265,14 @@ const GhostBtn = styled.button`
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
     &:hover {
         transform: translateY(-1px);
         border-color: #e0e4e9;
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.04);
         background: #fffdfd;
     }
+
     &:active {
         transform: translateY(0);
         background: #f5f5f5;
@@ -185,15 +280,35 @@ const GhostBtn = styled.button`
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
         transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     &:focus-visible {
         outline: none;
         border-color: #10b981;
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03),
             0 0 0 3px rgba(16, 185, 129, 0.15);
     }
+
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+    }
+
+    @media (max-width: 900px) {
+        width: 150px;
+        height: 38px;
+        font-size: 0.88rem;
+    }
+
+    @media (min-width: 1600px) {
+        width: 200px;
+        height: 48px;
+        font-size: 1.05rem;
+    }
+
+    @media (min-width: 1920px) {
+        width: 220px;
+        height: 52px;
+        font-size: 1.1rem;
     }
 `;
 
