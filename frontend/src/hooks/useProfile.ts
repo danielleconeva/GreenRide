@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { API_URL } from "../config";
 
 export type ProfileUser = {
     _id: string;
@@ -27,16 +28,14 @@ export type ProfileUser = {
     updatedAt?: string;
 };
 
-
 async function fetchProfile(): Promise<ProfileUser> {
-    const res = await fetch(`http://localhost:3000/api/users/profile/full`, {
+    const res = await fetch(`${API_URL}/users/profile/full`, {
         credentials: "include",
     });
     if (!res.ok) throw new Error("Failed to fetch profile");
     const data = await res.json();
     return data.user as ProfileUser;
 }
-
 
 export function useProfile() {
     return useQuery<ProfileUser>({

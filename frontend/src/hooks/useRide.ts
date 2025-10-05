@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Ride } from "../types/ride";
+import { API_URL } from "../config";
 
 async function getRideById(rideId: string): Promise<Ride> {
-    const res = await fetch(`http://localhost:3000/api/rides/${rideId}`, {
+    const res = await fetch(`${API_URL}/rides/${rideId}`, {
         credentials: "include",
     });
     if (!res.ok) throw new Error("Failed to fetch ride");
@@ -10,7 +11,7 @@ async function getRideById(rideId: string): Promise<Ride> {
 }
 
 async function deleteRide(rideId: string) {
-    const res = await fetch(`http://localhost:3000/api/rides/${rideId}`, {
+    const res = await fetch(`${API_URL}/rides/${rideId}`, {
         method: "DELETE",
         credentials: "include",
     });
@@ -19,7 +20,7 @@ async function deleteRide(rideId: string) {
 }
 
 async function updateRide(rideId: string, data: Partial<Ride>): Promise<Ride> {
-    const res = await fetch(`http://localhost:3000/api/rides/${rideId}`, {
+    const res = await fetch(`${API_URL}/rides/${rideId}`, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -41,9 +42,7 @@ export default function useRide(rideId?: string) {
     const deleteMutation = useMutation({
         mutationFn: (id: string) => deleteRide(id),
         onSuccess: () => {
-
             queryClient.invalidateQueries({ queryKey: ["myRides"] });
-
         },
     });
 
@@ -51,7 +50,6 @@ export default function useRide(rideId?: string) {
         mutationFn: (vars: { id: string; data: Partial<Ride> }) =>
             updateRide(vars.id, vars.data),
         onSuccess: (updatedRide) => {
-
             queryClient.setQueryData(["ride", updatedRide._id], updatedRide);
             queryClient.invalidateQueries({ queryKey: ["myRides"] });
         },

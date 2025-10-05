@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Ride, RideSearchParams } from "../types/ride";
+import { API_URL } from "../config";
 
 async function fetchRides(params: RideSearchParams): Promise<Ride[]> {
     const search = new URLSearchParams({
@@ -9,7 +10,7 @@ async function fetchRides(params: RideSearchParams): Promise<Ride[]> {
         passengers: String(params.passengers),
     }).toString();
 
-    const res = await fetch(`http://localhost:3000/api/rides?${search}`);
+    const res = await fetch(`${API_URL}/rides?${search}`);
     if (!res.ok) throw new Error("Failed to fetch rides");
     return res.json();
 }

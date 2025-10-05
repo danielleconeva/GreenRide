@@ -1,7 +1,6 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import type { Booking } from "../types/booking";
-
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+import { API_URL } from "../config";
 
 async function fetchJSON<T>(url: string): Promise<T> {
     const res = await fetch(url, { credentials: "include" });
@@ -10,7 +9,9 @@ async function fetchJSON<T>(url: string): Promise<T> {
         try {
             const data = await res.json();
             if (data?.error || data?.message) msg = data.error || data.message;
-        } catch { }
+        } catch {
+
+        }
         throw new Error(msg);
     }
     return res.json();
@@ -19,7 +20,7 @@ async function fetchJSON<T>(url: string): Promise<T> {
 export function useMyBookings() {
     return useQuery<Booking[], Error>({
         queryKey: ["bookings", "my"],
-        queryFn: () => fetchJSON<Booking[]>(`${API_BASE}/api/bookings/my`),
+        queryFn: () => fetchJSON<Booking[]>(`${API_URL}/bookings/my`),
         placeholderData: keepPreviousData,
     });
 }
@@ -27,7 +28,7 @@ export function useMyBookings() {
 export function useRideBookings(rideId?: string) {
     return useQuery<Booking[], Error>({
         queryKey: ["bookings", "ride", rideId],
-        queryFn: () => fetchJSON<Booking[]>(`${API_BASE}/api/bookings/ride/${rideId}`),
+        queryFn: () => fetchJSON<Booking[]>(`${API_URL}/bookings/ride/${rideId}`),
         enabled: !!rideId,
         placeholderData: keepPreviousData,
     });

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { API_URL } from "../config";
 
 export type Achievement = {
     name: string;
@@ -22,7 +23,7 @@ export type EcoResponse = {
 };
 
 async function fetchEcoStats(): Promise<EcoResponse> {
-    const res = await fetch("http://localhost:3000/api/users/profile/eco", {
+    const res = await fetch(`${API_URL}/users/profile/eco`, {
         credentials: "include",
     });
     if (!res.ok) throw new Error("Failed to fetch eco stats");
@@ -37,4 +38,3 @@ export function useEcoStats(enabled: boolean = true) {
         enabled,
     });
 }
-

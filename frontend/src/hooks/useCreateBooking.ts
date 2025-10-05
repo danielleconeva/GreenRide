@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { CreateBookingInput, CreateBookingResponse } from "../types/booking";
-
+import { API_URL } from "../config";
 
 async function postBooking(payload: CreateBookingInput): Promise<CreateBookingResponse> {
-    const res = await fetch("http://localhost:3000/api/bookings", {
+    const res = await fetch(`${API_URL}/bookings`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

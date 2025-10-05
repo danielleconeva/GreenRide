@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { API_URL } from "../config";
 
 export interface User { id: string; email: string; username: string; }
 interface AuthState { user: User | null; loading: boolean; error: string | null; }
 
 const initialState: AuthState = { user: null, loading: false, error: null };
-
 
 export const register = createAsyncThunk<
     User,
@@ -12,7 +12,7 @@ export const register = createAsyncThunk<
     { rejectValue: string }
 >("auth/register", async (u, { rejectWithValue }) => {
     try {
-        const res = await fetch("http://localhost:3000/api/auth/register", {
+        const res = await fetch(`${API_URL}/auth/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -31,14 +31,13 @@ export const register = createAsyncThunk<
     }
 });
 
-
 export const login = createAsyncThunk<
     User,
     { email: string; password: string },
     { rejectValue: string }
 >("auth/login", async (cred, { rejectWithValue }) => {
     try {
-        const res = await fetch("http://localhost:3000/api/auth/login", {
+        const res = await fetch(`${API_URL}/auth/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -52,14 +51,13 @@ export const login = createAsyncThunk<
     }
 });
 
-
 export const checkAuth = createAsyncThunk<
     User | null,
     void,
     { rejectValue: string }
 >("auth/checkAuth", async (_, { rejectWithValue }) => {
     try {
-        const res = await fetch("http://localhost:3000/api/users/profile", {
+        const res = await fetch(`${API_URL}/users/profile`, {
             credentials: "include",
         });
         if (!res.ok) return rejectWithValue("Not authenticated");
@@ -80,7 +78,7 @@ export const logout = createAsyncThunk<void, void, { rejectValue: string }>(
     "auth/logout",
     async (_, { rejectWithValue }) => {
         try {
-            const res = await fetch("http://localhost:3000/api/auth/logout", {
+            const res = await fetch(`${API_URL}/auth/logout`, {
                 method: "POST",
                 credentials: "include",
             });
