@@ -1,9 +1,6 @@
 import styled from "styled-components";
 import { useProfile } from "../../hooks/useProfile";
-import { useUpdateProfile } from "../../hooks/useUpdateProfile";
-import type { AppDispatch } from "../../store/store";
-import { useDispatch } from "react-redux";
-import { showNotification } from "../../store/notificationsSlice";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
 const Card = styled.section`
     background: #fff;
@@ -136,39 +133,32 @@ type Props = {
     isEditing: boolean;
 };
 
-export default function CarDetails({ isEditing }: Props) {
+const CarDetails = forwardRef(({ isEditing }: Props, ref) => {
     const { data: profileUser } = useProfile();
-    const dispatch = useDispatch<AppDispatch>();
-    const updateProfile = useUpdateProfile();
+    const [carData, setCarData] = useState({
+        make: "",
+        model: "",
+        year: "",
+        color: "",
+        licensePlate: "",
+    });
 
-    if (!profileUser) return null;
+    useEffect(() => {
+        if (profileUser?.car) {
+            setCarData({
+                make: profileUser.car.make || "",
+                model: profileUser.car.model || "",
+                year: profileUser.car.year || "",
+                color: profileUser.car.color || "",
+                licensePlate: profileUser.car.licensePlate || "",
+            });
+        }
+    }, [profileUser]);
 
-    function handleChange(field: string, value: string) {
-        if (!isEditing) return;
-        const newCar = { ...profileUser!.car, [field]: value };
+    useImperativeHandle(ref, () => ({ carData }));
 
-        updateProfile.mutate(
-            { car: newCar },
-            {
-                onSuccess: () => {
-                    dispatch(
-                        showNotification({
-                            type: "success",
-                            message: "Car details updated successfully",
-                        })
-                    );
-                },
-                onError: (err: any) => {
-                    dispatch(
-                        showNotification({
-                            type: "error",
-                            message:
-                                err?.message || "Failed to update car details",
-                        })
-                    );
-                },
-            }
-        );
+    function handleChange(field: keyof typeof carData, value: string) {
+        setCarData((prev) => ({ ...prev, [field]: value }));
     }
 
     return (
@@ -179,7 +169,7 @@ export default function CarDetails({ isEditing }: Props) {
                     <Label>Make</Label>
                     <Input
                         type="text"
-                        value={profileUser.car?.make || ""}
+                        value={carData.make}
                         placeholder="e.g. Toyota"
                         disabled={!isEditing}
                         onChange={(e) => handleChange("make", e.target.value)}
@@ -189,7 +179,7 @@ export default function CarDetails({ isEditing }: Props) {
                     <Label>Model</Label>
                     <Input
                         type="text"
-                        value={profileUser.car?.model || ""}
+                        value={carData.model}
                         placeholder="e.g. Prius"
                         disabled={!isEditing}
                         onChange={(e) => handleChange("model", e.target.value)}
@@ -199,7 +189,7 @@ export default function CarDetails({ isEditing }: Props) {
                     <Label>Year</Label>
                     <Input
                         type="text"
-                        value={profileUser.car?.year || ""}
+                        value={carData.year}
                         placeholder="e.g. 2022"
                         disabled={!isEditing}
                         onChange={(e) => handleChange("year", e.target.value)}
@@ -209,7 +199,7 @@ export default function CarDetails({ isEditing }: Props) {
                     <Label>Color</Label>
                     <Input
                         type="text"
-                        value={profileUser.car?.color || ""}
+                        value={carData.color}
                         placeholder="e.g. Silver"
                         disabled={!isEditing}
                         onChange={(e) => handleChange("color", e.target.value)}
@@ -219,7 +209,7 @@ export default function CarDetails({ isEditing }: Props) {
                     <Label>License Plate</Label>
                     <Input
                         type="text"
-                        value={profileUser.car?.licensePlate || ""}
+                        value={carData.licensePlate}
                         placeholder="e.g. ECO 123"
                         disabled={!isEditing}
                         onChange={(e) =>
@@ -230,4 +220,6 @@ export default function CarDetails({ isEditing }: Props) {
             </Form>
         </Card>
     );
-}
+});
+
+export default CarDetails;

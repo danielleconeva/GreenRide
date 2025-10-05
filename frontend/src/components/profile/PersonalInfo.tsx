@@ -1,9 +1,6 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { useProfile } from "../../hooks/useProfile";
-import { showNotification } from "../../store/notificationsSlice";
-import type { AppDispatch } from "../../store/store";
-import { useDispatch } from "react-redux";
 
 const Card = styled.section`
     background: #fff;
@@ -193,10 +190,8 @@ type Props = {
     isEditing: boolean;
 };
 
-export default function PersonalInfo({ isEditing }: Props) {
-    const { data: profileUser, refetch } = useProfile();
-    const dispatch = useDispatch<AppDispatch>();
-
+const PersonalInfo = forwardRef(({ isEditing }: Props, ref) => {
+    const { data: profileUser } = useProfile();
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -215,40 +210,10 @@ export default function PersonalInfo({ isEditing }: Props) {
         }
     }, [profileUser]);
 
-    async function handleChange(field: keyof typeof formData, value: string) {
+    useImperativeHandle(ref, () => ({ formData }));
+
+    function handleChange(field: keyof typeof formData, value: string) {
         setFormData((prev) => ({ ...prev, [field]: value }));
-
-        if (isEditing) {
-            try {
-                const response = await fetch(
-                    "http://localhost:3000/api/users/profile",
-                    {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include",
-                        body: JSON.stringify({ [field]: value }),
-                    }
-                );
-
-                if (!response.ok) throw new Error("Failed to update profile");
-
-                await refetch();
-
-                dispatch(
-                    showNotification({
-                        type: "success",
-                        message: "Profile updated successfully",
-                    })
-                );
-            } catch (err: any) {
-                dispatch(
-                    showNotification({
-                        type: "error",
-                        message: err?.message || "Profile update failed",
-                    })
-                );
-            }
-        }
     }
 
     return (
@@ -302,4 +267,6 @@ export default function PersonalInfo({ isEditing }: Props) {
             </Form>
         </Card>
     );
-}
+});
+
+export default PersonalInfo;

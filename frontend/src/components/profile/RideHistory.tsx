@@ -73,6 +73,32 @@ const RideList = styled.div`
     }
 `;
 
+const Fallback = styled.div`
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6b7280;
+    font-size: 1rem;
+    border: 1px dashed #d1d5db;
+    border-radius: 12px;
+    background: #f9fafb;
+    transition: all 0.3s ease;
+
+    @media (max-width: 640px) {
+        font-size: 0.9rem;
+        padding: 2rem 1rem;
+    }
+
+    @media (min-width: 1600px) {
+        font-size: 1.1rem;
+        padding: 3.5rem 2rem;
+    }
+
+    @media (min-width: 1920px) {
+        font-size: 1.2rem;
+        padding: 4rem 2.5rem;
+    }
+`;
+
 const RideItem = styled.div`
     border-radius: 12px;
     padding: 16px;
@@ -174,21 +200,6 @@ const RoleBadge = styled.span<{ type: "driver" | "passenger" }>`
     border-radius: 12px;
     margin-right: 0.75rem;
     transition: all 0.3s ease;
-
-    @media (max-width: 640px) {
-        font-size: 0.8rem;
-        padding: 0.25rem 0.6rem;
-    }
-
-    @media (min-width: 1600px) {
-        font-size: 1rem;
-        padding: 0.35rem 1rem;
-    }
-
-    @media (min-width: 1920px) {
-        font-size: 1.1rem;
-        padding: 0.45rem 1.1rem;
-    }
 `;
 
 const RideActions = styled.div`
@@ -203,39 +214,14 @@ const RideActions = styled.div`
         align-items: flex-start;
         gap: 10px;
     }
-
-    @media (min-width: 1600px) {
-        gap: 14px;
-    }
-
-    @media (min-width: 1920px) {
-        gap: 16px;
-    }
 `;
 
 const Price = styled.span<{ positive?: boolean }>`
     font-weight: 600;
     color: ${({ positive }) => (positive ? "#39a798" : "#d76c6c")};
     font-size: 1.1rem;
-    margin: 4rem 0 0.5rem 0;
+    margin-top: 4rem;
     transition: font-size 0.3s ease;
-
-    @media (max-width: 900px) {
-        margin: 0;
-        font-size: 1rem;
-    }
-
-    @media (max-width: 640px) {
-        font-size: 0.95rem;
-    }
-
-    @media (min-width: 1600px) {
-        font-size: 1.25rem;
-    }
-
-    @media (min-width: 1920px) {
-        font-size: 1.35rem;
-    }
 `;
 
 export default function RideHistory() {
@@ -255,74 +241,87 @@ export default function RideHistory() {
     return (
         <Card>
             <Title>Recent Rides</Title>
-            <RideList>
-                {myRides.map((ride) => {
-                    const isDriver = ride.driver._id === userId;
-                    const rideDate = new Date(
-                        ride.departureDate
-                    ).toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                    });
+            {myRides.length === 0 ? (
+                <Fallback>
+                    You haven’t taken or driven any rides yet.
+                    <br />
+                </Fallback>
+            ) : (
+                <RideList>
+                    {myRides.map((ride) => {
+                        const isDriver = ride.driver._id === userId;
+                        const rideDate = new Date(
+                            ride.departureDate
+                        ).toLocaleDateString("en-GB", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                        });
 
-                    const priceDisplay = isDriver
-                        ? `+ $${ride.pricePerSeat * ride.passengers.length}`
-                        : `- $${ride.pricePerSeat}`;
+                        const priceDisplay = isDriver
+                            ? `+ $${ride.pricePerSeat * ride.passengers.length}`
+                            : `- $${ride.pricePerSeat}`;
 
-                    return (
-                        <RideItem key={ride._id}>
-                            <RideInfo>
-                                <Row>
-                                    <div className="active">
-                                        <RoleBadge
-                                            type={
-                                                isDriver
-                                                    ? "driver"
-                                                    : "passenger"
-                                            }
-                                        >
-                                            {isDriver ? "Driver" : "Passenger"}
-                                        </RoleBadge>
-                                        <Calendar size={18} />
-                                        <span>{rideDate}</span>
-                                    </div>
-                                </Row>
-                                <Row className="map">
-                                    <MapPin size={20} color="#36a79a" />
-                                    <span>
-                                        {ride.from} → {ride.to}
-                                    </span>
-                                </Row>
-                                <Row>
-                                    <Users size={18} />
-                                    <span>
-                                        {isDriver ? (
-                                            <>
-                                                Passengers:{" "}
-                                                {ride.passengers.length > 0
-                                                    ? ride.passengers
-                                                          .map(
-                                                              (p) => p.username
-                                                          )
-                                                          .join(", ")
-                                                    : "None"}
-                                            </>
-                                        ) : (
-                                            <>Driver: {ride.driver.username}</>
-                                        )}
-                                    </span>
-                                </Row>
-                            </RideInfo>
-                            <RideActions>
-                                <Price positive={isDriver}>
-                                    {priceDisplay}
-                                </Price>
-                            </RideActions>
-                        </RideItem>
-                    );
-                })}
-            </RideList>
+                        return (
+                            <RideItem key={ride._id}>
+                                <RideInfo>
+                                    <Row>
+                                        <div className="active">
+                                            <RoleBadge
+                                                type={
+                                                    isDriver
+                                                        ? "driver"
+                                                        : "passenger"
+                                                }
+                                            >
+                                                {isDriver
+                                                    ? "Driver"
+                                                    : "Passenger"}
+                                            </RoleBadge>
+                                            <Calendar size={18} />
+                                            <span>{rideDate}</span>
+                                        </div>
+                                    </Row>
+                                    <Row className="map">
+                                        <MapPin size={20} color="#36a79a" />
+                                        <span>
+                                            {ride.from} → {ride.to}
+                                        </span>
+                                    </Row>
+                                    <Row>
+                                        <Users size={18} />
+                                        <span>
+                                            {isDriver ? (
+                                                <>
+                                                    Passengers:{" "}
+                                                    {ride.passengers.length > 0
+                                                        ? ride.passengers
+                                                              .map(
+                                                                  (p) =>
+                                                                      p.username
+                                                              )
+                                                              .join(", ")
+                                                        : "None"}
+                                                </>
+                                            ) : (
+                                                <>
+                                                    Driver:{" "}
+                                                    {ride.driver.username}
+                                                </>
+                                            )}
+                                        </span>
+                                    </Row>
+                                </RideInfo>
+                                <RideActions>
+                                    <Price positive={isDriver}>
+                                        {priceDisplay}
+                                    </Price>
+                                </RideActions>
+                            </RideItem>
+                        );
+                    })}
+                </RideList>
+            )}
         </Card>
     );
 }

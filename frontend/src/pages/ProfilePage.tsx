@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { User, Settings, Car, Clock } from "lucide-react";
 
@@ -7,6 +7,11 @@ import PersonalInfo from "../components/profile/PersonalInfo";
 import MyRides from "../components/profile/MyRides";
 import CarDetails from "../components/profile/CarDetails";
 import RideHistory from "../components/profile/RideHistory";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../store/store";
+import { useUpdateProfile } from "../hooks/useUpdateProfile";
+import { useProfile } from "../hooks/useProfile";
+import { showNotification } from "../store/notificationsSlice";
 
 const fadeSlideUp = keyframes`
   from {
@@ -276,15 +281,50 @@ export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState<
         "personal" | "rides" | "car" | "history"
     >("personal");
-
     const [isEditing, setIsEditing] = useState(false);
+
+    const personalRef = useRef<any>(null);
+    const carRef = useRef<any>(null);
+
+    const dispatch = useDispatch<AppDispatch>();
+    const updateProfile = useUpdateProfile();
+    const { refetch } = useProfile();
+
+    async function handleSave() {
+        const personalData = personalRef.current?.formData;
+        const carData = carRef.current?.carData;
+
+        try {
+            await updateProfile.mutateAsync({ ...personalData, car: carData });
+            await refetch();
+
+            dispatch(
+                showNotification({
+                    type: "success",
+                    message: "Profile updated successfully",
+                })
+            );
+        } catch (err: any) {
+            dispatch(
+                showNotification({
+                    type: "error",
+                    message: err?.message || "Failed to update profile",
+                })
+            );
+        } finally {
+            setIsEditing(false);
+        }
+    }
 
     return (
         <Wrap>
             <Container>
                 <ProfileHeader
                     isEditing={isEditing}
-                    setIsEditing={setIsEditing}
+                    setIsEditing={(v) => {
+                        if (isEditing && !v) handleSave();
+                        else setIsEditing(v);
+                    }}
                 />
             </Container>
 
@@ -294,29 +334,25 @@ export default function ProfilePage() {
                         active={activeTab === "personal"}
                         onClick={() => setActiveTab("personal")}
                     >
-                        <User />
-                        Personal
+                        <User /> Personal
                     </Tab>
                     <Tab
                         active={activeTab === "rides"}
                         onClick={() => setActiveTab("rides")}
                     >
-                        <Settings />
-                        My Rides
+                        <Settings /> My Rides
                     </Tab>
                     <Tab
                         active={activeTab === "car"}
                         onClick={() => setActiveTab("car")}
                     >
-                        <Car />
-                        Car Details
+                        <Car /> Car Details
                     </Tab>
                     <Tab
                         active={activeTab === "history"}
                         onClick={() => setActiveTab("history")}
                     >
-                        <Clock />
-                        Ride History
+                        <Clock /> Ride History
                     </Tab>
                 </Tabs>
             </TabsWrapper>
@@ -324,7 +360,7 @@ export default function ProfilePage() {
             <Section>
                 {activeTab === "personal" && (
                     <TabContent>
-                        <PersonalInfo isEditing={isEditing} />
+                        <PersonalInfo ref={personalRef} isEditing={isEditing} />
                     </TabContent>
                 )}
                 {activeTab === "rides" && (
@@ -334,7 +370,7 @@ export default function ProfilePage() {
                 )}
                 {activeTab === "car" && (
                     <TabContent>
-                        <CarDetails isEditing={isEditing} />
+                        <CarDetails ref={carRef} isEditing={isEditing} />
                     </TabContent>
                 )}
                 {activeTab === "history" && (
